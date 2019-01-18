@@ -17,9 +17,9 @@ checksum = twos * threes
 print('Checksum:', checksum)
 
 # Part 2
-for idx, line in enumerate(data):
-    for line2 in data[idx + 1:]:
-        different = [x for x, y in zip(line, line2) if x != y]
-        if len(different) == 1:
-            common = ''.join([x for x, y in zip(line, line2) if x == y])
-            print('Common characters:', common)
+from itertools import combinations
+for line1, line2 in combinations(data, 2):
+    different = [x for x, y in zip(line1, line2) if x != y]
+    if len(different) == 1:
+        common = ''.join([x for x, y in zip(line1, line2) if x == y])
+        print('Common characters:', common)
