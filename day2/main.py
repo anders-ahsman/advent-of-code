@@ -23,4 +23,3 @@ for idx, line in enumerate(data):
         if len(different) == 1:
             common = ''.join([x for x, y in zip(line, line2) if x == y])
             print('Common characters:', common)
-            break
