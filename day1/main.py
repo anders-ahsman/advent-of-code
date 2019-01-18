@@ -1,5 +1,3 @@
-import itertools
-
 with open('input.txt', 'r') as f:
     data = [int(x) for x in f.readlines()]
 
@@ -10,7 +8,8 @@ print('Sum of frequencies:', freq_sum)
 # Part 2
 seen = {0}
 freq = 0
-for num in itertools.cycle(data):
+from itertools import cycle
+for num in cycle(data):
     freq += num
     if freq in seen:
         print('First repeating frequency:', freq)
