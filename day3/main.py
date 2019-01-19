@@ -21,17 +21,22 @@ def load_claims():
     return claims
 
 def calc_overlaps(claims):
-    fabric = np.array([[0] * 1000 for x in range(1000)])
+    size = 1000
+    fabric = np.zeros((size, size))
 
     for c in claims:
         fabric[c.x:c.x + c.width, c.y:c.y + c.height] += 1
 
     claimed_more_than_once = 0
-    for row in fabric:
-        for cell in row:
-            if cell > 1:
-                claimed_more_than_once += 1
+    for cell in np.nditer(fabric):
+        if cell > 1:
+            claimed_more_than_once += 1
     print('Claimed more than once:', claimed_more_than_once)
+
+    for c in claims:
+        if all(cell == 1 for cell in np.nditer(fabric[c.x:c.x + c.width, c.y:c.y + c.height])):
+            print('Claims intact for ID:', c.id)
+            break
 
 claims = load_claims()
 calc_overlaps(claims)
