@@ -48,7 +48,7 @@ def create_schedule(events):
 
     return schedule
 
-def calc_guard_most_asleep(schedule):
+def calc_guard_most_minutes_asleep_total(schedule):
     sleep_schedule = {}
     for date, guard in schedule.items():
         minutes_asleep = len([x for x in guard.asleep if x == 1])
@@ -60,16 +60,37 @@ def calc_guard_most_asleep(schedule):
     return guard_id, minutes_asleep
 
 def calc_minute_most_asleep(schedule, guard_id, minutes_asleep):
-    asleep_highscore = [0] * 60
+    asleep_total = [0] * 60
     for date, guard in schedule.items():
         if guard.id == guard_id:
-            asleep_highscore = [x + y for x, y in zip(guard.asleep, asleep_highscore)]
+            asleep_total = [x + y for x, y in zip(guard.asleep, asleep_total)]
 
-    minute_most_asleep = asleep_highscore.index(max(asleep_highscore))
+    minute_most_asleep = asleep_total.index(max(asleep_total))
     return minute_most_asleep
+
+def calc_guard_most_freq_asleep_same_minute(schedule):
+    asleep_total_by_guard = {}
+    for date, guard in schedule.items():
+        if guard.id not in asleep_total_by_guard:
+            asleep_total_by_guard[guard.id] = [0] * 60
+        asleep_total_by_guard[guard.id] = [x + y for x, y in zip(guard.asleep, asleep_total_by_guard[guard.id])]
+
+    highscore_max = 0
+    highscore_guard_id = None
+    for guard_id, score in asleep_total_by_guard.items():
+        highscore = max(score)
+        if highscore > highscore_max:
+            highscore_max = highscore
+            highscore_guard_id = guard_id
+
+    most_freq_asleep_minute = asleep_total_by_guard[highscore_guard_id].index(highscore_max)
+    return highscore_guard_id, most_freq_asleep_minute
 
 events = parse_input()
 schedule = create_schedule(events)
-guard_id, minutes_asleep = calc_guard_most_asleep(schedule)
+guard_id, minutes_asleep = calc_guard_most_minutes_asleep_total(schedule)
 minute_most_asleep = calc_minute_most_asleep(schedule, guard_id, minutes_asleep)
 print('Part 1:', guard_id * minute_most_asleep)
+
+guard_id, most_freq_asleep_minute = calc_guard_most_freq_asleep_same_minute(schedule)
+print('Part 2:', guard_id * most_freq_asleep_minute)
