@@ -1,18 +1,20 @@
-with open('input.txt', 'r') as f:
-    polymer = f.read()
+def read_polymer():
+    with open('input.txt', 'r') as f:
+        polymer = f.read()
+        return polymer
 
-while True:
-    print(len(polymer))
-    for idx, char in enumerate(polymer):
-        at_last_element = idx + 1 == len(polymer)
-        if not at_last_element:
-            next_char = polymer[idx + 1]
-            if char.lower() == next_char.lower():
-                # Remove this and next char from polymer and restart
-                polymer = polymer[0:idx] + polymer[idx + 2:]
-                break
+def opposite_polarity(a, b):
+    return abs(ord(a) - ord(b)) == 32
 
-    reached_last_element = idx == len(polymer) - 1
-    if reached_last_element:
-        print('Final length:', len(polymer))
-        break
+def calc_final_length(polymer):
+    stack = []
+    for c in polymer:
+        if len(stack) > 0 and opposite_polarity(c, stack[-1]):
+            stack.pop()
+        else:
+            stack.append(c)
+    return len(stack)
+
+polymer = read_polymer()
+final_length = calc_final_length(polymer)
+print('Final length:', final_length)
