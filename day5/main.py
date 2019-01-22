@@ -15,6 +15,10 @@ def calc_final_length(polymer):
             stack.append(c)
     return len(stack)
 
-polymer = read_polymer()
-final_length = calc_final_length(polymer)
-print('Final length:', final_length)
+def part1():
+    polymer = read_polymer()
+    final_length = calc_final_length(polymer)
+    print('Final length:', final_length)
+
+if __name__ == '__main__':
+    part1()
