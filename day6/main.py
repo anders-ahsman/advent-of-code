@@ -1,8 +1,7 @@
 def read_coordinates():
     with open('input.txt', 'r') as f:
-        coordinates = [[int(num) for num in line.strip().split(', ')]
-            for line in f.readlines()]
-        return coordinates
+        return tuple(tuple(int(num) for num in line.strip().split(', '))
+            for line in f.readlines())
 
 def part1():
     coordinates = read_coordinates()
