@@ -21,13 +21,7 @@ def determine_order(requirements):
     while len(order) < unique_steps_initial_count:
         steps_only_in_first = []
         for step in unique_steps:
-            only_in_first = True
-            for requirement in requirements:
-                second = requirement[1]
-                if second == step:
-                    only_in_first = False
-                    break
-
+            only_in_first = len([r for r in requirements if r[1] == step]) == 0
             if only_in_first:
                 steps_only_in_first.append(step)
 
