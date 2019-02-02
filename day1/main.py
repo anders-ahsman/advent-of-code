@@ -10,14 +10,14 @@ def read_input():
 
 def part2():
     data = read_input()
-    seen = {0}
+    seen = set()
     freq = 0
-    from itertools import cycle
-    for num in cycle(data):
-        freq += num
-        if freq in seen:
-            return freq
-        seen.add(freq)
+    while True:
+        for num in data:
+            freq += num
+            if freq in seen:
+                return freq
+            seen.add(freq)
 
 if __name__ == '__main__':
     freq_sum = part1()
