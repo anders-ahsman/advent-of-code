@@ -34,11 +34,11 @@ def calc_step_order(requirements):
     return step_order
 
 def get_unique_steps(requirements):
-    unique = set()
-    for s in requirements:
-        unique.add(s[0])
-        unique.add(s[1])
-    return unique
+    unique_steps = set()
+    for r in requirements:
+        unique_steps.add(r[0])
+        unique_steps.add(r[1])
+    return unique_steps
 
 if __name__ == '__main__':
     part1()
