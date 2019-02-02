@@ -11,14 +11,13 @@ def read_requirements():
         for row in f.readlines():
             m = re.match(r'Step (\w) must be finished before step (\w) can begin.', row)
             requirements.append((m.group(1), m.group(2)))
-    return tuple(requirements)
+    return requirements
 
 def determine_order(requirements):
     order = ''
 
     unique_steps = get_unique_steps(requirements)
-    unique_steps_initial_count = len(unique_steps)
-    while len(order) < unique_steps_initial_count:
+    while len(unique_steps) > 0:
         steps_only_in_first = []
         for step in unique_steps:
             only_in_first = len([r for r in requirements if r[1] == step]) == 0
