@@ -10,7 +10,7 @@ def read_input():
 
 def part2():
     data = read_input()
-    seen = set()
+    seen = {0}
     freq = 0
     while True:
         for num in data:
