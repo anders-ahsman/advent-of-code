@@ -30,17 +30,20 @@ def read_input():
     return data
 
 def calc_overlap_count(claims):
-    size = 1000
-    fabric = np.zeros((size, size))
-
-    for c in claims:
-        fabric[c.x:c.x + c.width, c.y:c.y + c.height] += 1
-
+    fabric = calc_fabric(claims)
     overlap_count = 0
     for cell in np.nditer(fabric):
         if cell > 1:
             overlap_count += 1
     return overlap_count
+
+def calc_fabric(claims):
+    # Fabric with number of claims as value
+    size = 1000
+    fabric = np.zeros((size, size))
+    for c in claims:
+        fabric[c.x:c.x + c.width, c.y:c.y + c.height] += 1
+    return fabric
 
 def part2():
     claims = load_claims()
@@ -49,12 +52,7 @@ def part2():
     return claim_id_intact
 
 def calc_claim_id_intact(claims):
-    size = 1000
-    fabric = np.zeros((size, size))
-
-    for c in claims:
-        fabric[c.x:c.x + c.width, c.y:c.y + c.height] += 1
-
+    fabric = calc_fabric(claims)
     for c in claims:
         if all(cell == 1 for cell in np.nditer(fabric[c.x:c.x + c.width, c.y:c.y + c.height])):
             return c.id
