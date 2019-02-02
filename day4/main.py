@@ -2,6 +2,23 @@ import operator
 import re
 from datetime import datetime
 
+def part1():
+    events = parse_input()
+    schedule = create_schedule(events)
+    guard_id, minutes_asleep = calc_guard_most_minutes_asleep_total(schedule)
+    minute_most_asleep = calc_minute_most_asleep(schedule, guard_id, minutes_asleep)
+    answer = guard_id * minute_most_asleep
+    print('Part 1:', answer)
+    return answer
+
+def part2():
+    events = parse_input()
+    schedule = create_schedule(events)
+    guard_id, most_freq_asleep_minute = calc_guard_most_freq_asleep_same_minute(schedule)
+    answer = guard_id * most_freq_asleep_minute
+    print('Part 2:', answer)
+    return answer
+
 with open('input.txt', 'r') as f:
     data = [x.strip() for x in f.readlines()]
 
@@ -86,11 +103,6 @@ def calc_guard_most_freq_asleep_same_minute(schedule):
     most_freq_asleep_minute = asleep_total_by_guard[highscore_guard_id].index(highscore_max)
     return highscore_guard_id, most_freq_asleep_minute
 
-events = parse_input()
-schedule = create_schedule(events)
-guard_id, minutes_asleep = calc_guard_most_minutes_asleep_total(schedule)
-minute_most_asleep = calc_minute_most_asleep(schedule, guard_id, minutes_asleep)
-print('Part 1:', guard_id * minute_most_asleep)
-
-guard_id, most_freq_asleep_minute = calc_guard_most_freq_asleep_same_minute(schedule)
-print('Part 2:', guard_id * most_freq_asleep_minute)
+if __name__ == "__main__":
+    part1()
+    part2()
