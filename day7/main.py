@@ -4,6 +4,7 @@ def part1():
     requirements = read_requirements()
     order = calc_step_order(requirements)
     print('Part 1:', order)
+    return order
 
 def read_requirements():
     requirements = []
