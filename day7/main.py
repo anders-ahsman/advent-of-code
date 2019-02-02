@@ -2,7 +2,7 @@ import re
 
 def part1():
     requirements = read_requirements()
-    order = determine_order(requirements)
+    order = calc_step_order(requirements)
     print('Part 1:', order)
 
 def read_requirements():
@@ -13,26 +13,25 @@ def read_requirements():
             requirements.append((m.group(1), m.group(2)))
     return requirements
 
-def determine_order(requirements):
-    order = ''
+def calc_step_order(requirements):
+    step_order = ''
 
-    unique_steps = get_unique_steps(requirements)
-    while len(unique_steps) > 0:
-        steps_only_in_first = []
-        for step in unique_steps:
-            only_in_first = len([r for r in requirements if r[1] == step]) == 0
-            if only_in_first:
-                steps_only_in_first.append(step)
+    steps = get_unique_steps(requirements)
+    while len(steps) > 0:
+        steps_only_left_side = []
+        for step in steps:
+            only_left_side = len([r for r in requirements if r[1] == step]) == 0
+            if only_left_side:
+                steps_only_left_side.append(step)
 
-        steps_only_in_first.sort()
-        step_to_add = steps_only_in_first[0]
+        steps_only_left_side.sort()
+        step_add = steps_only_left_side[0]
 
-        requirements = [r for r in requirements if r[0] != step_to_add]
-        unique_steps = [s for s in unique_steps if s != step_to_add]
+        step_order += step_add
+        steps.remove(step_add)
+        requirements = [r for r in requirements if r[0] != step_add]
 
-        order += step_to_add
-
-    return order
+    return step_order
 
 def get_unique_steps(requirements):
     unique = set()
