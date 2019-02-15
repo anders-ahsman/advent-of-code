@@ -21,16 +21,14 @@ def calc_step_order(requirements):
     while len(steps) > 0:
         steps_only_left_side = []
         for step in steps:
-            only_left_side = len([r for r in requirements if r[1] == step]) == 0
-            if only_left_side:
+            if not [r for r in requirements if r[1] == step]:
                 steps_only_left_side.append(step)
 
         steps_only_left_side.sort()
-        step_add = steps_only_left_side[0]
-
-        step_order += step_add
-        steps.remove(step_add)
-        requirements = [r for r in requirements if r[0] != step_add]
+        step_added = steps_only_left_side[0]
+        step_order += step_added
+        steps.remove(step_added)
+        requirements = [r for r in requirements if r[0] != step_added]
 
     return step_order
 
