@@ -52,7 +52,7 @@ def get_steps_only_left_side(steps, requirements):
 def calc_total_time(requirements, worker_count):
     time = -1
     workers = []
-    for i in range(worker_count):
+    for _ in range(worker_count):
         workers.append([0, None])
 
     steps = get_unique_steps(requirements)

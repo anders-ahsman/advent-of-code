@@ -27,7 +27,7 @@ def unpack(numbers):
     children_count, metadata_count = numbers[:2]
     children = []
     idx = 2
-    for i in range(children_count):
+    for _ in range(children_count):
         child, child_size = unpack(numbers[idx:])
         children.append(child)
         idx += child_size
