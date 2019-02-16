@@ -24,9 +24,7 @@ class Node:
         self.metadata = metadata
 
 def unpack(numbers):
-    children_count = numbers[0]
-    metadata_count = numbers[1]
-
+    children_count, metadata_count = numbers[:2]
     children = []
     idx = 2
     for i in range(children_count):
