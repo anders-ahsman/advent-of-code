@@ -5,12 +5,12 @@ def part1():
     games = read_input()
     for players, last_marble in games:
         score = play_marble(players, last_marble)
-        high_score = score[max(score)]
+        high_score = max(score.values())
         print('%d players; last marble is worth %d points: high score is %d'
             % (players, last_marble, high_score))
 
 def read_input():
-    with open('input_test.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         games = []
         for row in f.readlines():
             m = re.match(r'(\d+) players; last marble is worth (\d+) points', row)
