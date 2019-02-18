@@ -1,13 +1,13 @@
-# import unittest
+import unittest
 
-# from main import part1, part2
+from main import part1, part2
 
-# class Tests(unittest.TestCase):
-#     def test_part1_returns_expected_answer(self):
-#         self.assertEqual(part1(), 40977)
+class Tests(unittest.TestCase):
+    def test_part1_returns_expected_answer(self):
+        self.assertEqual(part1(), 418237)
 
-#     def test_part2_returns_expected_answer(self):
-#         self.assertEqual(part2(), 27490)
+    def test_part2_returns_expected_answer(self):
+        self.assertEqual(part2(), 3505711612)
 
-# if __name__ == '__main__':
-#     unittest.main()
+if __name__ == '__main__':
+    unittest.main()
