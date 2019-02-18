@@ -58,13 +58,10 @@ class DoublyLinkedList:
 def play_marble(player_count, last_marble):
     score = defaultdict(int)
     circle = DoublyLinkedList(Node(0))
-    player = 0
+
     for marble in range(1, last_marble + 1):
-        player += 1
-        if player > player_count:
-            player = 1
         if marble % 23 == 0:
-            score[player] += marble + circle.remove_at_pos(-7)
+            score[marble % player_count] += marble + circle.remove_at_pos(-7)
         else:
             circle.add_node(Node(marble))
 
