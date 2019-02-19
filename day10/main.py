@@ -1,6 +1,6 @@
 import re
 
-def part1():
+def part1_and_2():
     stars = read_input()
     fast_forward_to_message(stars)
 
@@ -20,16 +20,19 @@ def read_input():
         return stars
 
 def fast_forward_to_message(stars):
+    seconds = 0
     min_area = None
     while True:
         area = calc_area(stars)
         if not min_area or area < min_area:
             min_area = area
             move_stars(stars)
+            seconds += 1
         else:
             # Area is getting bigger, assume minimum was reached last time.
             move_stars_backwards(stars)
             print_stars(stars)
+            print('Would have taken %d seconds' % (seconds - 1))
             break
 
 def calc_area(stars):
@@ -70,4 +73,4 @@ def is_star_at_pos(stars, x, y):
     return False
 
 if __name__ == '__main__':
-    part1()
+    part1_and_2()
