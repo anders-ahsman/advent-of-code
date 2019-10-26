@@ -1,7 +1,7 @@
 from itertools import cycle
 from math import floor, sqrt
 
-def part1(target_value, calc_value):
+def spiral_memory(target_value, calc_value, calc_final_value):
     directions = cycle([(1, 0), (0, -1), (-1, 0), (0, 1)])
     move_dir = next(directions)
 
@@ -29,8 +29,7 @@ def part1(target_value, calc_value):
 
         move_dir = check_dir
 
-    steps = abs(pos[0] - start_pos[0]) + abs(pos[1] - start_pos[1])
-    return steps
+    return calc_final_value(value, a, pos, start_pos)
 
 def add_vecs(a, b):
     return tuple([sum(x) for x in zip(a, b)])
@@ -46,6 +45,33 @@ def part1_set_value():
 
     return inner
 
+def part1_final_value(value, a, pos, start_pos):
+    return abs(pos[0] - start_pos[0]) + abs(pos[1] - start_pos[1])
+
+def part2_set_value():
+    value = None
+
+    def inner(a, pos):
+        x = pos[0]
+        y = pos[1]
+
+        nonlocal value
+        if not value:
+            value = 1
+        else:
+            value = \
+                sum(a[y - 1][x - 1 : x + 2]) + \
+                sum(a[y    ][x - 1 : x + 2]) + \
+                sum(a[y + 1][x - 1 : x + 2])
+        a[y][x] = value
+        return value
+
+    return inner
+
+def part2_final_value(value, a, pos, start_pos):
+    return value
+
 if __name__ == '__main__':
-    steps = part1(368078, part1_set_value())
-    print(steps)
+    puzzle_input = 368078
+    print(spiral_memory(puzzle_input, part1_set_value(), part1_final_value))
+    print(spiral_memory(puzzle_input, part2_set_value(), part2_final_value))
