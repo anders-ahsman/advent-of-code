@@ -35,17 +35,14 @@ def part1(target_value, calc_value):
 def add_vecs(a, b):
     return tuple([sum(x) for x in zip(a, b)])
 
-class Object(object):
-    pass
-
 def part1_set_value():
-    scope = Object()
-    scope.count = 1
+    count = 1
 
     def inner(a, pos):
-        a[pos[1]][pos[0]] = scope.count
-        scope.count += 1
-        return scope.count
+        nonlocal count
+        a[pos[1]][pos[0]] = count
+        count += 1
+        return count
 
     return inner
 
