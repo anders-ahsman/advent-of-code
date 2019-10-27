@@ -3,15 +3,15 @@ def read_input():
         return [row.rstrip().split(' ') for row in f.readlines()]
 
 def part1(passphrases):
-    return sum(1 for passphrase in passphrases if is_valid(passphrase))
+    return sum(1 for passphrase in passphrases if not has_duplicate_words(passphrase))
 
-def is_valid(passphrase):
+def has_duplicate_words(passphrase):
     s = set()
     for word in passphrase:
         if word in s:
-            return False
+            return True
         s.add(word)
-    return True
+    return False
 
 if __name__ == '__main__':
     passphrases = read_input()
