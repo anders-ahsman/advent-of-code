@@ -11,8 +11,7 @@ def part1(instructions):
         pos += offset
         jumps += 1
         if pos < 0 or pos >= len(instructions):
-            break
-    return jumps
+            return jumps
 
 def part2(instructions):
     jumps = 0
@@ -26,8 +25,7 @@ def part2(instructions):
         pos += offset
         jumps += 1
         if pos < 0 or pos >= len(instructions):
-            break
-    return jumps
+            return jumps
 
 if __name__ == '__main__':
     print(part1(read_input()))
