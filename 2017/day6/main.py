@@ -3,7 +3,6 @@ def read_input():
         return [int(n) for n in f.readline().split()]
 
 def part1_and_2(blocks):
-    seen = set()
     steps = 0
     sequences_to_steps = dict()
 
@@ -13,10 +12,9 @@ def part1_and_2(blocks):
         blocks = redistribute(blocks, target_idx)
 
         sequence = get_representation(blocks)
-        if sequence in seen:
+        if sequence in sequences_to_steps:
             loop_size = steps - sequences_to_steps[sequence]
             return steps, loop_size
-        seen.add(sequence)
         sequences_to_steps[sequence] = steps
 
 def redistribute(blocks, idx):
