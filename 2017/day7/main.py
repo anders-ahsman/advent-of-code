@@ -13,7 +13,7 @@ def read_input():
         for line in f.readlines():
             m = re.match(r'(\w+) \((\d+)\)', line)
             name = m.group(1)
-            weight = m.group(2)
+            weight = int(m.group(2))
             program = Program(name, weight)
 
             separator = '->'
@@ -36,11 +36,29 @@ def get_children_count(p, programs):
     count = 0
     if p.children:
         for child_name in p.children:
-            child = next(c for c in programs if c.name == child_name)
+            child = get_by_name(child_name, programs)
             count += 1 + get_children_count(child, programs)
     return count
 
+def get_by_name(name, programs):
+    return next(p for p in programs if p.name == name)
+
+def part2(root, programs):
+    # root = get_by_name('tulwp', programs)
+    for child_name in root.children:
+        child = get_by_name(child_name, programs)
+        print(child.name, get_total_weight(child, programs))
+
+def get_total_weight(p, programs):
+    total_weight = p.weight
+    if p.children:
+        for child_name in p.children:
+            child = get_by_name(child_name, programs)
+            total_weight += get_total_weight(child, programs)
+    return total_weight
+
 if __name__ == '__main__':
     programs = read_input()
-    root = part1(programs)
+    root = part1(read_input())
     print(root.name)
+    part2(root, programs)
