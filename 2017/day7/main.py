@@ -1,4 +1,4 @@
-import re
+import re, sys
 
 class Program:
     def __init__(self, name, weight, children=None):
@@ -7,23 +7,22 @@ class Program:
         self.children = children
 
 def read_input():
-    with open('input.txt', 'r') as f:
-        programs = []
+    programs = []
 
-        for line in f.readlines():
-            m = re.match(r'(\w+) \((\d+)\)', line)
-            name = m.group(1)
-            weight = int(m.group(2))
-            program = Program(name, weight)
+    for line in sys.stdin:
+        m = re.match(r'(\w+) \((\d+)\)', line)
+        name = m.group(1)
+        weight = int(m.group(2))
+        program = Program(name, weight)
 
-            separator = '->'
-            if separator in line:
-                _, children = line.split(separator)
-                program.children = [x.strip() for x in children.split(',')]
+        separator = '->'
+        if separator in line:
+            _, children = line.split(separator)
+            program.children = [x.strip() for x in children.split(',')]
 
-            programs.append(program)
+        programs.append(program)
 
-        return programs
+    return programs
 
 def part1(programs):
     root = next(p for p in programs if is_root(p, programs))
@@ -59,6 +58,6 @@ def get_total_weight(p, programs):
 
 if __name__ == '__main__':
     programs = read_input()
-    root = part1(read_input())
+    root = part1(programs)
     print(root.name)
     part2(root, programs)
