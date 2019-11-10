@@ -1,8 +1,8 @@
 import unittest
-from main import get_garbage_count, get_score
+from main import get_score_and_size
 
 class Tests(unittest.TestCase):
-    def test_get_score(self):
+    def test_get_score_and_size_returns_expected_score(self):
         for line, expected_score in [
             ('{}', 1),
             ('{{{}}}', 6),
@@ -15,10 +15,11 @@ class Tests(unittest.TestCase):
             ('{{<a!>},{<a!>},{<a!>},{<ab>}}', 3)
         ]:
             with self.subTest():
-                self.assertEqual(get_score(line), expected_score, line)
+                score, _ = get_score_and_size(line)
+                self.assertEqual(score, expected_score, line)
 
-    def test_get_garbage_count(self):
-        for line, expected_count in [
+    def test_get_score_and_size_returns_expected_size(self):
+        for line, expected_size in [
             ('<>', 0),
             ('<random characters>', 17),
             ('<<<<>', 3),
@@ -28,7 +29,8 @@ class Tests(unittest.TestCase):
             ('<{o"i!a,<{i<a>', 10),
         ]:
             with self.subTest():
-                self.assertEqual(get_garbage_count(line), expected_count, line)
+                _, size = get_score_and_size(line)
+                self.assertEqual(size, expected_size, line)
 
 if __name__ == '__main__':
     unittest.main()
