@@ -1,5 +1,5 @@
 import unittest
-from main import get_score
+from main import get_garbage_count, get_score
 
 class Tests(unittest.TestCase):
     def test_get_score(self):
@@ -16,6 +16,19 @@ class Tests(unittest.TestCase):
         ]:
             with self.subTest():
                 self.assertEqual(get_score(line), expected_score, line)
+
+    def test_get_garbage_count(self):
+        for line, expected_count in [
+            ('<>', 0),
+            ('<random characters>', 17),
+            ('<<<<>', 3),
+            ('<{!>}>', 2),
+            ('<!!>', 0),
+            ('<!!!>>', 0),
+            ('<{o"i!a,<{i<a>', 10),
+        ]:
+            with self.subTest():
+                self.assertEqual(get_garbage_count(line), expected_count, line)
 
 if __name__ == '__main__':
     unittest.main()
