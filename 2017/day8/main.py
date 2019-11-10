@@ -12,6 +12,7 @@ def read_input():
     return instructions
 
 def exec_instructions(instructions):
+    max_value = None
     register = defaultdict(int)
     for i in instructions:
         var, rest = i.condition.split(' ', 1)
@@ -20,7 +21,11 @@ def exec_instructions(instructions):
             var, rest = i.action.split(' ', 1)
             action = 'register[\'' + var + '\'] ' + rest
             exec(action)
-    print(max(register.values()))
+            value = register[var]
+            if not max_value or value > max_value:
+                max_value = value
+    print('final max value', max(register.values()))
+    print('highest value ever', max_value)
 
 if __name__ == '__main__':
     instructions = read_input()
