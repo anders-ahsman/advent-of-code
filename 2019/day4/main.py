@@ -20,7 +20,15 @@ def is_valid(password):
             elif digit == prev_digit:
                 any_adjacent_digits_same = True
 
-    return any_adjacent_digits_same
+    if not any_adjacent_digits_same:
+        return False
+
+    exactly_twice = False
+    for n in range(1, 11):
+        if not exactly_twice and password.count(str(n)) == 2:
+            exactly_twice = True
+
+    return exactly_twice
 
 if __name__ == '__main__':
     number_of_passwords = calc_number_of_passwords(271973, 785961)
