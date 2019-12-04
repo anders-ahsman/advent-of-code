@@ -1,9 +1,6 @@
 def calc_number_of_passwords(range_lower, range_upper):
-    valid_count = 0
-    for password in range(range_lower, range_upper + 1):
-        if is_valid(password):
-            valid_count += 1
-    return valid_count
+    return sum(1 for password in range(range_lower, range_upper + 1)
+        if is_valid(password))
 
 def is_valid(password):
     password = str(password)
