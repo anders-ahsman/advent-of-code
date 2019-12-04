@@ -1,4 +1,3 @@
-import math
 import sys
 
 def read_input():
@@ -9,55 +8,39 @@ def read_input():
     return wires
 
 def main(wires):
-    size = 20000
-    board = []
-    for _ in range(size):
-        board.append([0] * size)
+    points_1st_wire = set()
+    points_2nd_wire = set()
 
-    pos_start = int(math.floor(size / 2))
-    for wire in wires:
-        pos_x = pos_start
-        pos_y = pos_start
-        board[pos_y][pos_x] = 1
-        visted = set()
+    for i, wire in enumerate(wires):
+        pos_x = 0
+        pos_y = 0
+        points = set()
         for op in wire:
+            direction = op[0]
             distance = int(op[1:])
-            if op[0] == 'L':
+            if direction == 'L':
                 for x in range(pos_x - 1, pos_x - distance - 1, -1):
-                    point = (x, pos_y)
-                    if not point in visted:
-                        board[pos_y][x] += 1
-                        visted.add(point)
+                    points.add((x, pos_y))
                 pos_x -= distance
-            elif op[0] == 'R':
+            elif direction == 'R':
                 for x in range(pos_x + 1, pos_x + distance + 1):
-                    point = (x, pos_y)
-                    if not point in visted:
-                        board[pos_y][x] += 1
-                        visted.add(point)
+                    points.add((x, pos_y))
                 pos_x += distance
-            elif op[0] == 'D':
+            elif direction == 'D':
                 for y in range(pos_y + 1, pos_y + distance + 1):
-                    point = (pos_x, y)
-                    if not point in visted:
-                        board[y][pos_x] += 1
-                        visted.add(point)
+                    points.add((pos_x, y))
                 pos_y += distance
-            elif op[0] == 'U':
+            elif direction == 'U':
                 for y in range(pos_y - 1, pos_y - distance - 1, -1):
-                    point = (pos_x, y)
-                    if not point in visted:
-                        board[y][pos_x] += 1
-                        visted.add(point)
+                    points.add((pos_x, y))
                 pos_y -= distance
+        if i == 0:
+            points_1st_wire = points
+        else:
+            points_2nd_wire = points
 
-    distances = []
-    for y, row in enumerate(board):
-        for x, num in enumerate(row):
-            if num > 1 and (x != pos_start and y != pos_start):
-                distances.append(abs(x - pos_start) + abs(y - pos_start))
-
-    return min(distances)
+    intersections = points_1st_wire.intersection(points_2nd_wire)
+    return min([abs(x) + abs(y) for x, y in intersections])
 
 if __name__ == '__main__':
     wires = read_input()
