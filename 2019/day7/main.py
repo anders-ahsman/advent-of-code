@@ -19,13 +19,11 @@ class Instruction(Enum):
 
 class IntcodeComputer:
     def __init__(self, program):
-        self.program = program[:]
-
-    def run(self, inputs):
         self.pos = 0
-        self.output = None
-        inputs.reverse()
+        self.program = program[:]
+        self.inputs = []
 
+    def run(self):
         while True:
             opcode = self.program[self.pos]
 
@@ -60,12 +58,14 @@ class IntcodeComputer:
                 self.pos += 4
 
             elif opcode == Instruction.INPUT.value:
-                self.program[self.program[self.pos + 1]] = inputs.pop()
+                indata = self.inputs[0]
+                self.inputs = self.inputs[1:]
+                self.program[self.program[self.pos + 1]] = indata
                 self.pos += 2
 
             elif opcode == Instruction.OUTPUT.value:
-                self.output = self.program[self.program[self.pos + 1]]
                 self.pos += 2
+                yield self.program[self.program[self.pos - 1]]
 
             elif opcode == Instruction.JUMP_IF_TRUE.value:
                 val1 = self.get_param(1, mode_1st_param)
@@ -106,7 +106,7 @@ class IntcodeComputer:
                 self.pos += 4
 
             elif opcode == Instruction.ABORT.value:
-                return self.output
+                return
 
             else:
                 raise Exception(f'Unknown opcode {opcode}')
@@ -151,23 +151,30 @@ def read_input():
     return program
 
 def main(program):
-    computers = []
-    for _ in range(5):
-        computers.append(IntcodeComputer(program))
-
     max_output = 0
-    for phases in [''.join(p) for p in permutations('01234')]:
+    for phases in [''.join(p) for p in permutations('56789')]:
         phases = [int(p) for p in list(phases)]
-        last_output = None
+        is_first_instruction = True
+        computers = []
         for i, phase in enumerate(phases):
             c = IntcodeComputer(program)
-            inputs = list((phase, last_output if i > 0 else 0))
-            last_output = c.run(inputs)
-            if last_output > max_output:
-                max_output = last_output
+            c.inputs.append(phase)
+            computers.append(c)
 
-    print(f'max_output {max_output}')
+        try:
+            while True:
+                for i, phase in enumerate(phases):
+                    c = computers[i]
+                    c.inputs.append(0 if is_first_instruction else last_output)
+                    is_first_instruction = False
 
+                    last_output = next(c.run())
+                    if last_output > max_output:
+                        max_output = last_output
+        except StopIteration:
+            pass
+
+    print(max_output)
 
 if __name__ == '__main__':
     program = read_input()
