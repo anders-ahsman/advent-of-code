@@ -21,6 +21,11 @@ def main(image):
     except IndexError:
         pass
 
+    print(f'checksum: {calc_checksum(layers)}')
+
+    render(layers, rows, cols)
+
+def calc_checksum(layers):
     max_zeros_idx = None
     min_zeros = None
     for idx, layer in enumerate(layers):
@@ -32,7 +37,23 @@ def main(image):
     layer = layers[max_zeros_idx]
     ones = sum([1 for x in layer if x == 1])
     twos = sum([1 for x in layer if x == 2])
-    print(ones * twos)
+    return ones * twos
+
+def render(layers, rows, cols):
+    rendered = []
+    for _ in range(rows):
+        rendered.append([2] * cols)
+
+    for layer in layers:
+        for row_idx, row in enumerate(range(rows)):
+            for col in range(cols):
+                if rendered[row][col] == 2:
+                    rendered[row][col] = layer[row_idx * cols + col]
+
+    for row in rendered:
+        for char in row:
+            print(char, end='')
+        print()
 
 if __name__ == '__main__':
     image = read_input()
