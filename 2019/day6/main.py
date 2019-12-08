@@ -15,7 +15,6 @@ def main(orbits):
         orbiting = [b for a, b in orbits if a == planet]
         planets_to_orbiting[planet] = orbiting
 
-    planets = [p for p in planets if p != 'COM']
     print(calc_total_steps(planets, planets_to_orbiting))
 
 def calc_total_steps(planets, planets_to_orbiting):
