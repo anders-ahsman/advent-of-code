@@ -127,28 +127,10 @@ class IntcodeComputer:
                 raise Exception(f'Unknown instruction {instruction}')
 
     def get_modes(self, opcode):
-        if len(str(opcode)) > 2:
-            modes_raw = list([int(x) for x in str(opcode)[:-2]])
-
-            try:
-                mode1 = Mode(modes_raw.pop())
-            except IndexError:
-                mode1 = Mode.POSITION
-
-            try:
-                mode2 = Mode(modes_raw.pop())
-            except IndexError:
-                mode2 = Mode.POSITION
-
-            try:
-                mode3 = Mode(modes_raw.pop())
-            except IndexError:
-                mode3 = Mode.POSITION
-        else:
-            mode1 = Mode.POSITION
-            mode2 = Mode.POSITION
-            mode3 = Mode.POSITION
-
+        modes = [int(m) for m in list(f'{opcode:05}'[:3])]
+        mode1 = Mode(modes.pop())
+        mode2 = Mode(modes.pop())
+        mode3 = Mode(modes.pop())
         return mode1, mode2, mode3
 
     def get_params(self, mode1, mode2):
