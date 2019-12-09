@@ -47,7 +47,6 @@ class IntcodeComputer:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-
                 self.pos += 4
 
             elif opcode == Instruction.MULTIPLY.value:
@@ -74,7 +73,6 @@ class IntcodeComputer:
                     self.program[self.relative_base + self.program[self.pos + 1]] = indata
                 else:
                     raise Exception(f'Unknown mode {mode1}')
-
                 self.pos += 2
 
             elif opcode == Instruction.OUTPUT.value:
@@ -91,7 +89,7 @@ class IntcodeComputer:
 
             elif opcode == Instruction.LESS_THAN.value:
                 param1, param2 = self.get_params(mode1, mode2)
-                result = 1 if param1 < param2 else 0
+                result = int(param1 < param2)
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
@@ -101,12 +99,11 @@ class IntcodeComputer:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-
                 self.pos += 4
 
             elif opcode == Instruction.EQUALS.value:
                 param1, param2 = self.get_params(mode1, mode2)
-                result = 1 if param1 == param2 else 0
+                result = int(param1 == param2)
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
@@ -116,7 +113,6 @@ class IntcodeComputer:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-
                 self.pos += 4
 
             elif opcode == Instruction.ADJUST_RELATIVE_BASE.value:
