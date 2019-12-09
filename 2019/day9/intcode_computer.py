@@ -32,8 +32,7 @@ class IntcodeComputer:
     def run(self):
         while True:
             opcode = self.program[self.pos]
-
-            mode1, mode2, mode3 = self.set_modes(opcode)
+            mode1, mode2, mode3 = self.get_modes(opcode)
 
             opcode = int(str(opcode)[-2:])
             if opcode == Instruction.ADD.value:
@@ -137,25 +136,23 @@ class IntcodeComputer:
             else:
                 raise Exception(f'Unknown opcode {opcode}')
 
-    def set_modes(self, opcode):
+    def get_modes(self, opcode):
         if len(str(opcode)) > 2:
-            modes = str(opcode)[:-2]
+            modes_raw = list([int(x) for x in str(opcode)[:-2]])
 
             try:
-                mode1 = Mode(int(modes[-1:]))
-            except ValueError:
+                mode1 = Mode(modes_raw.pop())
+            except IndexError:
                 mode1 = Mode.POSITION
-            modes = modes[:-1]
 
             try:
-                mode2 = Mode(int(modes[-1:]))
-            except ValueError:
+                mode2 = Mode(modes_raw.pop())
+            except IndexError:
                 mode2 = Mode.POSITION
-            modes = modes[:-1]
 
             try:
-                mode3 = Mode(int(modes[-1:]))
-            except ValueError:
+                mode3 = Mode(modes_raw.pop())
+            except IndexError:
                 mode3 = Mode.POSITION
         else:
             mode1 = Mode.POSITION
