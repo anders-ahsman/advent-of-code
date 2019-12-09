@@ -33,9 +33,9 @@ class IntcodeComputer:
         while True:
             opcode = self.program[self.idx]
             mode1, mode2, mode3 = self.get_modes(opcode)
+            instruction = Instruction(int(str(opcode)[-2:]))
 
-            opcode = int(str(opcode)[-2:])
-            if opcode == Instruction.ADD.value:
+            if instruction == Instruction.ADD:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = param1 + param2
 
@@ -49,7 +49,7 @@ class IntcodeComputer:
                     raise Exception(f'Unknown mode {mode3}')
                 self.idx += 4
 
-            elif opcode == Instruction.MULTIPLY.value:
+            elif instruction == Instruction.MULTIPLY:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = param1 * param2
 
@@ -63,7 +63,7 @@ class IntcodeComputer:
                     raise Exception(f'Unknown mode {mode3}')
                 self.idx += 4
 
-            elif opcode == Instruction.INPUT.value:
+            elif instruction == Instruction.INPUT:
                 indata = self.inputs[0]
                 self.inputs = self.inputs[1:]
 
@@ -75,19 +75,19 @@ class IntcodeComputer:
                     raise Exception(f'Unknown mode {mode1}')
                 self.idx += 2
 
-            elif opcode == Instruction.OUTPUT.value:
+            elif instruction == Instruction.OUTPUT:
                 self.output = self.get_param(mode1, 1)
                 self.idx += 2
 
-            elif opcode == Instruction.JUMP_IF_TRUE.value:
+            elif instruction == Instruction.JUMP_IF_TRUE:
                 param1, param2 = self.get_params(mode1, mode2)
                 self.idx = param2 if param1 else self.idx + 3
 
-            elif opcode == Instruction.JUMP_IF_FALSE.value:
+            elif instruction == Instruction.JUMP_IF_FALSE:
                 param1, param2 = self.get_params(mode1, mode2)
                 self.idx = param2 if not param1 else self.idx + 3
 
-            elif opcode == Instruction.LESS_THAN.value:
+            elif instruction == Instruction.LESS_THAN:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = int(param1 < param2)
 
@@ -101,7 +101,7 @@ class IntcodeComputer:
                     raise Exception(f'Unknown mode {mode3}')
                 self.idx += 4
 
-            elif opcode == Instruction.EQUALS.value:
+            elif instruction == Instruction.EQUALS:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = int(param1 == param2)
 
@@ -115,16 +115,16 @@ class IntcodeComputer:
                     raise Exception(f'Unknown mode {mode3}')
                 self.idx += 4
 
-            elif opcode == Instruction.ADJUST_RELATIVE_BASE.value:
+            elif instruction == Instruction.ADJUST_RELATIVE_BASE:
                 param1 = self.get_param(mode1, 1)
                 self.relative_base += param1
                 self.idx += 2
 
-            elif opcode == Instruction.ABORT.value:
+            elif instruction == Instruction.ABORT:
                 return self.output
 
             else:
-                raise Exception(f'Unknown opcode {opcode}')
+                raise Exception(f'Unknown instruction {instruction}')
 
     def get_modes(self, opcode):
         if len(str(opcode)) > 2:
