@@ -169,8 +169,7 @@ def main(program):
                     is_first_instruction = False
 
                     last_output = next(c.run())
-                    if last_output > max_output:
-                        max_output = last_output
+                    max_output = max(last_output, max_output)
         except StopIteration:
             pass
 
