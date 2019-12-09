@@ -33,101 +33,101 @@ class IntcodeComputer:
         while True:
             opcode = self.program[self.pos]
 
-            mode_1st_param, mode_2nd_param, mode_3rd_param = self.set_modes(opcode)
+            mode1, mode2, mode3 = self.set_modes(opcode)
 
             opcode = int(str(opcode)[-2:])
             if opcode == Instruction.ADD.value:
-                val1 = self.get_param(1, mode_1st_param)
-                val2 = self.get_param(2, mode_2nd_param)
+                val1 = self.get_param(1, mode1)
+                val2 = self.get_param(2, mode2)
                 result = val1 + val2
 
-                if mode_3rd_param == Mode.POSITION:
+                if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
-                elif mode_3rd_param == Mode.IMMEDIATE:
+                elif mode3 == Mode.IMMEDIATE:
                     self.program[self.pos + 3] = result
-                elif mode_3rd_param == Mode.RELATIVE:
+                elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
-                    raise Exception(f'Unknown mode {mode_3rd_param}')
+                    raise Exception(f'Unknown mode {mode3}')
 
                 self.pos += 4
 
             elif opcode == Instruction.MULTIPLY.value:
-                val1 = self.get_param(1, mode_1st_param)
-                val2 = self.get_param(2, mode_2nd_param)
+                val1 = self.get_param(1, mode1)
+                val2 = self.get_param(2, mode2)
                 result = val1 * val2
 
-                if mode_3rd_param == Mode.POSITION:
+                if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
-                elif mode_3rd_param == Mode.IMMEDIATE:
+                elif mode3 == Mode.IMMEDIATE:
                     self.program[self.pos + 3] = result
-                elif mode_3rd_param == Mode.RELATIVE:
+                elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
-                    raise Exception(f'Unknown mode {mode_3rd_param}')
+                    raise Exception(f'Unknown mode {mode3}')
                 self.pos += 4
 
             elif opcode == Instruction.INPUT.value:
                 indata = self.inputs[0]
                 self.inputs = self.inputs[1:]
 
-                if mode_1st_param == Mode.POSITION:
+                if mode1 == Mode.POSITION:
                     self.program[self.program[self.pos + 1]] = indata
-                elif mode_1st_param == Mode.RELATIVE:
+                elif mode1 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.pos + 1]] = indata
                 else:
-                    raise Exception(f'Unknown mode {mode_1st_param}')
+                    raise Exception(f'Unknown mode {mode1}')
 
                 self.pos += 2
 
             elif opcode == Instruction.OUTPUT.value:
-                self.output = self.get_param(1, mode_1st_param)
+                self.output = self.get_param(1, mode1)
                 self.pos += 2
 
             elif opcode == Instruction.JUMP_IF_TRUE.value:
-                val1 = self.get_param(1, mode_1st_param)
-                val2 = self.get_param(2, mode_2nd_param)
+                val1 = self.get_param(1, mode1)
+                val2 = self.get_param(2, mode2)
                 self.pos = val2 if val1 else self.pos + 3
 
             elif opcode == Instruction.JUMP_IF_FALSE.value:
-                val1 = self.get_param(1, mode_1st_param)
-                val2 = self.get_param(2, mode_2nd_param)
+                val1 = self.get_param(1, mode1)
+                val2 = self.get_param(2, mode2)
                 self.pos = val2 if not val1 else self.pos + 3
 
             elif opcode == Instruction.LESS_THAN.value:
-                val1 = self.get_param(1, mode_1st_param)
-                val2 = self.get_param(2, mode_2nd_param)
+                val1 = self.get_param(1, mode1)
+                val2 = self.get_param(2, mode2)
                 result = 1 if val1 < val2 else 0
 
-                if mode_3rd_param == Mode.POSITION:
+                if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
-                elif mode_3rd_param == Mode.IMMEDIATE:
+                elif mode3 == Mode.IMMEDIATE:
                     self.program[self.pos + 3] = result
-                elif mode_3rd_param == Mode.RELATIVE:
+                elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
-                    raise Exception(f'Unknown mode {mode_3rd_param}')
+                    raise Exception(f'Unknown mode {mode3}')
 
                 self.pos += 4
 
             elif opcode == Instruction.EQUALS.value:
-                val1 = self.get_param(1, mode_1st_param)
-                val2 = self.get_param(2, mode_2nd_param)
+                val1 = self.get_param(1, mode1)
+                val2 = self.get_param(2, mode2)
                 result = 1 if val1 == val2 else 0
 
-                if mode_3rd_param == Mode.POSITION:
+                if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
-                elif mode_3rd_param == Mode.IMMEDIATE:
+                elif mode3 == Mode.IMMEDIATE:
                     self.program[self.pos + 3] = result
-                elif mode_3rd_param == Mode.RELATIVE:
+                elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.pos + 3]] = result
                 else:
-                    raise Exception(f'Unknown mode {mode_3rd_param}')
+                    raise Exception(f'Unknown mode {mode3}')
 
                 self.pos += 4
 
             elif opcode == Instruction.ADJUST_RELATIVE_BASE.value:
-                val1 = self.get_param(1, mode_1st_param)
+                val1 = self.get_param(1, mode1)
                 self.relative_base += val1
                 self.pos += 2
 
@@ -142,27 +142,27 @@ class IntcodeComputer:
             modes = str(opcode)[:-2]
 
             try:
-                mode_1st_param = Mode(int(modes[-1:]))
+                mode1 = Mode(int(modes[-1:]))
             except ValueError:
-                mode_1st_param = Mode.POSITION
+                mode1 = Mode.POSITION
             modes = modes[:-1]
 
             try:
-                mode_2nd_param = Mode(int(modes[-1:]))
+                mode2 = Mode(int(modes[-1:]))
             except ValueError:
-                mode_2nd_param = Mode.POSITION
+                mode2 = Mode.POSITION
             modes = modes[:-1]
 
             try:
-                mode_3rd_param = Mode(int(modes[-1:]))
+                mode3 = Mode(int(modes[-1:]))
             except ValueError:
-                mode_3rd_param = Mode.POSITION
+                mode3 = Mode.POSITION
         else:
-            mode_1st_param = Mode.POSITION
-            mode_2nd_param = Mode.POSITION
-            mode_3rd_param = Mode.POSITION
+            mode1 = Mode.POSITION
+            mode2 = Mode.POSITION
+            mode3 = Mode.POSITION
 
-        return mode_1st_param, mode_2nd_param, mode_3rd_param
+        return mode1, mode2, mode3
 
     def get_param(self, offset, mode):
         if mode == Mode.POSITION:
