@@ -21,7 +21,7 @@ class Instruction(Enum):
 
 class IntcodeComputer:
     def __init__(self, program):
-        self.pos = 0
+        self.idx = 0
         self.relative_base = 0
         self.inputs = []
         self.output = None
@@ -31,7 +31,7 @@ class IntcodeComputer:
 
     def run(self):
         while True:
-            opcode = self.program[self.pos]
+            opcode = self.program[self.idx]
             mode1, mode2, mode3 = self.get_modes(opcode)
 
             opcode = int(str(opcode)[-2:])
@@ -40,85 +40,85 @@ class IntcodeComputer:
                 result = param1 + param2
 
                 if mode3 == Mode.POSITION:
-                    self.program[self.program[self.pos + 3]] = result
+                    self.program[self.program[self.idx + 3]] = result
                 elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.pos + 3] = result
+                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.pos + 3]] = result
+                    self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-                self.pos += 4
+                self.idx += 4
 
             elif opcode == Instruction.MULTIPLY.value:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = param1 * param2
 
                 if mode3 == Mode.POSITION:
-                    self.program[self.program[self.pos + 3]] = result
+                    self.program[self.program[self.idx + 3]] = result
                 elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.pos + 3] = result
+                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.pos + 3]] = result
+                    self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-                self.pos += 4
+                self.idx += 4
 
             elif opcode == Instruction.INPUT.value:
                 indata = self.inputs[0]
                 self.inputs = self.inputs[1:]
 
                 if mode1 == Mode.POSITION:
-                    self.program[self.program[self.pos + 1]] = indata
+                    self.program[self.program[self.idx + 1]] = indata
                 elif mode1 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.pos + 1]] = indata
+                    self.program[self.relative_base + self.program[self.idx + 1]] = indata
                 else:
                     raise Exception(f'Unknown mode {mode1}')
-                self.pos += 2
+                self.idx += 2
 
             elif opcode == Instruction.OUTPUT.value:
                 self.output = self.get_param(mode1, 1)
-                self.pos += 2
+                self.idx += 2
 
             elif opcode == Instruction.JUMP_IF_TRUE.value:
                 param1, param2 = self.get_params(mode1, mode2)
-                self.pos = param2 if param1 else self.pos + 3
+                self.idx = param2 if param1 else self.idx + 3
 
             elif opcode == Instruction.JUMP_IF_FALSE.value:
                 param1, param2 = self.get_params(mode1, mode2)
-                self.pos = param2 if not param1 else self.pos + 3
+                self.idx = param2 if not param1 else self.idx + 3
 
             elif opcode == Instruction.LESS_THAN.value:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = int(param1 < param2)
 
                 if mode3 == Mode.POSITION:
-                    self.program[self.program[self.pos + 3]] = result
+                    self.program[self.program[self.idx + 3]] = result
                 elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.pos + 3] = result
+                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.pos + 3]] = result
+                    self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-                self.pos += 4
+                self.idx += 4
 
             elif opcode == Instruction.EQUALS.value:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = int(param1 == param2)
 
                 if mode3 == Mode.POSITION:
-                    self.program[self.program[self.pos + 3]] = result
+                    self.program[self.program[self.idx + 3]] = result
                 elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.pos + 3] = result
+                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.pos + 3]] = result
+                    self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
                     raise Exception(f'Unknown mode {mode3}')
-                self.pos += 4
+                self.idx += 4
 
             elif opcode == Instruction.ADJUST_RELATIVE_BASE.value:
                 param1 = self.get_param(mode1, 1)
                 self.relative_base += param1
-                self.pos += 2
+                self.idx += 2
 
             elif opcode == Instruction.ABORT.value:
                 return self.output
@@ -156,10 +156,10 @@ class IntcodeComputer:
 
     def get_param(self, mode, offset):
         if mode == Mode.POSITION:
-            return self.program[self.program[self.pos + offset]]
+            return self.program[self.program[self.idx + offset]]
         elif mode == Mode.IMMEDIATE:
-            return self.program[self.pos + offset]
+            return self.program[self.idx + offset]
         elif mode == Mode.RELATIVE:
-            return self.program[self.relative_base + self.program[self.pos + offset]]
+            return self.program[self.relative_base + self.program[self.idx + offset]]
 
         raise Exception(f'Unknown mode {mode}')
