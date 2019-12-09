@@ -36,9 +36,8 @@ class IntcodeComputer:
 
             opcode = int(str(opcode)[-2:])
             if opcode == Instruction.ADD.value:
-                val1 = self.get_param(1, mode1)
-                val2 = self.get_param(2, mode2)
-                result = val1 + val2
+                param1, param2 = self.get_params(mode1, mode2)
+                result = param1 + param2
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
@@ -52,9 +51,8 @@ class IntcodeComputer:
                 self.pos += 4
 
             elif opcode == Instruction.MULTIPLY.value:
-                val1 = self.get_param(1, mode1)
-                val2 = self.get_param(2, mode2)
-                result = val1 * val2
+                param1, param2 = self.get_params(mode1, mode2)
+                result = param1 * param2
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
@@ -80,23 +78,20 @@ class IntcodeComputer:
                 self.pos += 2
 
             elif opcode == Instruction.OUTPUT.value:
-                self.output = self.get_param(1, mode1)
+                self.output = self.get_param(mode1, 1)
                 self.pos += 2
 
             elif opcode == Instruction.JUMP_IF_TRUE.value:
-                val1 = self.get_param(1, mode1)
-                val2 = self.get_param(2, mode2)
-                self.pos = val2 if val1 else self.pos + 3
+                param1, param2 = self.get_params(mode1, mode2)
+                self.pos = param2 if param1 else self.pos + 3
 
             elif opcode == Instruction.JUMP_IF_FALSE.value:
-                val1 = self.get_param(1, mode1)
-                val2 = self.get_param(2, mode2)
-                self.pos = val2 if not val1 else self.pos + 3
+                param1, param2 = self.get_params(mode1, mode2)
+                self.pos = param2 if not param1 else self.pos + 3
 
             elif opcode == Instruction.LESS_THAN.value:
-                val1 = self.get_param(1, mode1)
-                val2 = self.get_param(2, mode2)
-                result = 1 if val1 < val2 else 0
+                param1, param2 = self.get_params(mode1, mode2)
+                result = 1 if param1 < param2 else 0
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
@@ -110,9 +105,8 @@ class IntcodeComputer:
                 self.pos += 4
 
             elif opcode == Instruction.EQUALS.value:
-                val1 = self.get_param(1, mode1)
-                val2 = self.get_param(2, mode2)
-                result = 1 if val1 == val2 else 0
+                param1, param2 = self.get_params(mode1, mode2)
+                result = 1 if param1 == param2 else 0
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.pos + 3]] = result
@@ -126,8 +120,8 @@ class IntcodeComputer:
                 self.pos += 4
 
             elif opcode == Instruction.ADJUST_RELATIVE_BASE.value:
-                val1 = self.get_param(1, mode1)
-                self.relative_base += val1
+                param1 = self.get_param(mode1, 1)
+                self.relative_base += param1
                 self.pos += 2
 
             elif opcode == Instruction.ABORT.value:
@@ -161,7 +155,10 @@ class IntcodeComputer:
 
         return mode1, mode2, mode3
 
-    def get_param(self, offset, mode):
+    def get_params(self, mode1, mode2):
+        return self.get_param(mode1, 1), self.get_param(mode2, 2)
+
+    def get_param(self, mode, offset):
         if mode == Mode.POSITION:
             return self.program[self.program[self.pos + offset]]
         elif mode == Mode.IMMEDIATE:
