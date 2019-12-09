@@ -1,3 +1,4 @@
+from collections import defaultdict
 from enum import Enum
 from itertools import permutations
 import sys
@@ -25,10 +26,9 @@ class IntcodeComputer:
         self.relative_base = 0
         self.inputs = []
         self.output = None
-        self.program = program[:]
-        program_max_size = 1000000
-        while len(self.program) < program_max_size:
-            self.program.append(0)
+        self.program = defaultdict(int)
+        for i, op in enumerate(program):
+            self.program[i] = op
 
     def run(self):
         while True:
