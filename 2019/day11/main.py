@@ -17,6 +17,7 @@ def main(program):
     pos = (0, 0)
     direction = Direction.UP
     painted = defaultdict(int)
+    painted[pos] = 1
 
     computer = IntcodeComputer(program)
     com_iter = computer.run()
@@ -33,7 +34,12 @@ def main(program):
     except StopIteration:
         pass
 
-    print(len(painted))
+    for y in range(20):
+        for x in range(80):
+            pos = (x, y)
+            value = '#' if pos in painted and painted[pos] == 1 else ' '
+            print(value, end='')
+        print()
 
 def turn(direction, turn_dir):
     if turn_dir == 0: # left 90 deg
@@ -61,11 +67,11 @@ def turn(direction, turn_dir):
 
 def move(pos, direction):
     if direction == Direction.UP:
-        pos = (pos[0], pos[1] + 1)
+        pos = (pos[0], pos[1] - 1)
     elif direction == Direction.LEFT:
         pos = (pos[0] - 1, pos[1])
     elif direction == Direction.DOWN:
-        pos = (pos[0], pos[1] - 1)
+        pos = (pos[0], pos[1] + 1)
     elif direction == Direction.RIGHT:
         pos = (pos[0] + 1, pos[1])
     else:
