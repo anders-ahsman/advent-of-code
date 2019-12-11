@@ -42,6 +42,6 @@ def get_angle(a, b):
 def get_distance(a, b):
     return sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     astroids = read_input()
     calc_best_position(astroids)
