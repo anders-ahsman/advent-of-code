@@ -12,14 +12,7 @@ def main(orbits):
     print(part2(orbits))
 
 def part1(orbits):
-    orbit_count = 0
-    for k, v in orbits.items():
-        orbit_count += 1
-        while v != 'COM':
-            orbit_count += 1
-            v = orbits[v]
-
-    return orbit_count
+    return sum([len(get_path_to_com(k, orbits)) + 1 for k in orbits])
 
 def part2(orbits):
     path_you = get_path_to_com('YOU', orbits)
