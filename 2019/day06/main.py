@@ -1,49 +1,41 @@
 import sys
 
 def read_input():
-    orbits = []
+    orbits = {}
     for line in sys.stdin:
         a, b = line.rstrip().split(')')
-        orbits.append((a, b))
+        orbits[b] = a
     return orbits
 
 def main(orbits):
-    planets = set([a for a, b in orbits]).union(set([b for a, b in orbits]))
+    print(part1(orbits))
+    print(part2(orbits))
 
-    planets_to_orbiting = dict()
-    for planet in planets:
-        orbiting = [b for a, b in orbits if a == planet]
-        planets_to_orbiting[planet] = orbiting
+def part1(orbits):
+    orbit_count = 0
+    for k, v in orbits.items():
+        orbit_count += 1
+        while v != 'COM':
+            orbit_count += 1
+            v = orbits[v]
 
-    print(calc_total_steps(planets, planets_to_orbiting))
+    return orbit_count
 
-    path_you = calc_path_to_com('YOU', planets_to_orbiting, set())
-    path_santa = calc_path_to_com('SAN', planets_to_orbiting, set())
-    path_common = set([p for p in path_you]).intersection(set([p for p in path_santa]))
-    print(len(path_you.difference(path_common)) + len(path_santa.difference(path_common)))
+def part2(orbits):
+    path_you = get_path_to_com('YOU', orbits)
+    path_santa = get_path_to_com('SAN', orbits)
+    path_common = path_you.intersection(path_santa)
 
-def calc_total_steps(planets, planets_to_orbiting):
-    total_steps = 0
-    for p in planets:
-        total_steps += calc_steps_for_planet(p, planets_to_orbiting, 0)
-    return total_steps
+    return len(path_you.difference(path_common)) + len(path_santa.difference(path_common))
 
-def calc_steps_for_planet(planet, planets_to_orbiting, steps):
-    for a, orbiting in planets_to_orbiting.items():
-        if planet in orbiting:
-            planet = a
-            steps += 1 + calc_steps_for_planet(planet, planets_to_orbiting, steps)
-            return steps
-    return 0
+def get_path_to_com(k, orbits):
+    path = set()
+    v = orbits[k]
+    while v != 'COM':
+        path.add(v)
+        v = orbits[v]
 
-def calc_path_to_com(planet, planets_to_orbiting, path):
-    for a, orbiting in planets_to_orbiting.items():
-        if planet in orbiting:
-            planet = a
-            if planet == 'COM':
-                return path
-            path.add(planet)
-            return calc_path_to_com(planet, planets_to_orbiting, path)
+    return path
 
 if __name__ == '__main__':
     orbits = read_input()
