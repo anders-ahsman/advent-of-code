@@ -10,10 +10,11 @@ def read_input():
                 astroids.add((x, y))
     return astroids
 
-def calc_position(astroids):
+def calc_best_position(astroids):
     pos_to_others_asc_distance = defaultdict(list)
     for a1 in astroids:
-        pos_to_others_asc_distance[a1] = sorted([a2 for a2 in astroids if a2 != a1], key=lambda a: get_distance(a, a1))
+        pos_to_others_asc_distance[a1] = sorted([a2 for a2 in astroids if a2 != a1],
+            key=lambda a: get_distance(a, a1))
 
     pos_to_visible = defaultdict(list)
     for pos, others in pos_to_others_asc_distance.items():
@@ -43,4 +44,4 @@ def get_distance(a, b):
 
 if __name__ == "__main__":
     astroids = read_input()
-    calc_position(astroids)
+    calc_best_position(astroids)
