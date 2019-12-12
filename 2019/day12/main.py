@@ -2,8 +2,7 @@ from itertools import combinations
 import sys
 
 class Moon:
-    def __init__(self, name, pos_x, pos_y, pos_z):
-        self.name = name
+    def __init__(self, pos_x, pos_y, pos_z):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.pos_z = pos_z
@@ -12,7 +11,7 @@ class Moon:
         self.vel_z = 0
 
     def __repr__(self):
-        return f'pos=<x={self.pos_x}, y={self.pos_y}, z={self.pos_z}>, vel=<x={self.vel_x}, y={self.vel_y}, z={self.vel_z}> ({self.name})'
+        return f'pos=<x={self.pos_x}, y={self.pos_y}, z={self.pos_z}>, vel=<x={self.vel_x}, y={self.vel_y}, z={self.vel_z}>'
 
     def get_energy(self):
         return (abs(self.pos_x) + abs(self.pos_y) + abs(self.pos_z)) * (abs(self.vel_x) + abs(self.vel_y) + abs(self.vel_z))
@@ -20,9 +19,9 @@ class Moon:
 def read_input():
     # todo
     moons = []
-    for name, x, y, z in [('Io', 3, -6, 6), ('Europa', 10, 7, -9), ('Ganymede', -3, -7, 9), ('Callisto', -8, 0, 4)]:
-    # for name, x, y, z in [('Io', -1, 0, 2), ('Europa', 2, -10, -7), ('Ganymede', 4, -8, 8), ('Callisto', 3, 5, -1)]:
-        moons.append(Moon(name, x, y, z))
+    for x, y, z in [(3, -6, 6), (10, 7, -9), (-3, -7, 9), (-8, 0, 4)]:
+    # for x, y, z in [(-1, 0, 2), (2, -10, -7), (4, -8, 8), (3, 5, -1)]:
+        moons.append(Moon(x, y, z))
     return moons
 
 def apply_gravity(moons):
