@@ -1,5 +1,7 @@
 import sys
-from intcode_computer import IntcodeComputer
+
+sys.path.append('..')
+from common.intcode_computer import IntcodeComputer
 
 def read_input():
     program = [int(x) for x in next(sys.stdin).split(',')]

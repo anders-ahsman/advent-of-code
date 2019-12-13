@@ -1,7 +1,9 @@
 import sys
 from collections import defaultdict
 from enum import Enum
-from intcode_computer import IntcodeComputer
+
+sys.path.append('..')
+from common.intcode_computer import IntcodeComputer
 
 class Direction(Enum):
     UP = 0
