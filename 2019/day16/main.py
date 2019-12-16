@@ -1,12 +1,12 @@
 import sys
 
 def read_input():
-    digits = [int(char) for char in next(sys.stdin)]
+    digits = [int(char) for char in next(sys.stdin) if char != '\n']
     return digits
 
 def main(digits):
     digits = calc_digits(digits, 100)
-    print(digits)
+    print(f'Part 1: {digits}')
 
 def calc_digits(digits, count):
     for _ in range(count):
@@ -17,7 +17,7 @@ def calc_digits(digits, count):
             for j in range(len(digits)):
                 digit_sum += digits_copy[j] * next(it)
             digits[i] = int(str(digit_sum)[-1])
-    return digits
+    return ''.join([str(d) for d in digits[0:8]])
 
 def get_pattern_iter(repeat_target):
     digits = (0, 1, 0, -1)
