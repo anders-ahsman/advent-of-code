@@ -18,10 +18,11 @@ def calc_digits(digits, phase_count):
     return ''.join([str(d) for d in digits[0:8]])
 
 def get_pattern_iter(repeat_target):
-    digits = (0, 1, 0, -1)
+    pattern = (0, 1, 0, -1)
+    pattern_len = len(pattern)
     pos = 0
     repeat_count = 0
-    digit = digits[pos]
+    digit = pattern[pos]
     is_first = True
     while True:
         if is_first:
@@ -32,8 +33,8 @@ def get_pattern_iter(repeat_target):
         repeat_count += 1
         if repeat_count >= repeat_target:
             repeat_count = 0
-            pos = (pos + 1) % len(digits)
-            digit = digits[pos]
+            pos = (pos + 1) % pattern_len
+            digit = pattern[pos]
 
 if __name__ == '__main__':
     digits = read_input()
