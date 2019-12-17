@@ -27,11 +27,14 @@ def part1(program):
         pass
 
     intersections = set()
+    scaffold = ord('#')
     for y, line in enumerate(rows):
         for x, char in enumerate(line):
             try:
-                if char == 35 and line[x-1] == 35 and line[x+1] == 35 and rows[y-1][x] == 35 and rows[y+1][x] == 35:
-                    intersections.add((x, y))
+                if char == scaffold and \
+                    line[x-1]    == scaffold and line[x+1]    == scaffold and \
+                    rows[y-1][x] == scaffold and rows[y+1][x] == scaffold:
+                        intersections.add((x, y))
             except IndexError:
                 pass
 
