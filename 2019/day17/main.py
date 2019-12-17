@@ -41,6 +41,35 @@ def get_camera_feed(it):
         pass
     return rows
 
+def part2(program):
+    program[0] = 2
+    computer = IntcodeComputer(program)
+    computer.inputs = get_movement_pattern()
+    it = computer.run()
+    try:
+        while True:
+            output = next(it)
+            if output == 10:
+                print()
+            elif output > 255:
+                print(output)
+            else:
+                print(chr(output), end='')
+    except StopIteration:
+        pass
+
+def get_movement_pattern():
+    movement_pattern = []
+    for command in ['A,B,A,C', 'R,10', 'L,8', 'R,4,L,6', 'n']:
+        for part in command.split(','):
+            for char in part:
+                movement_pattern.append(ord(char))
+            movement_pattern.append(ord(','))
+        movement_pattern.pop() # remove last ','
+        movement_pattern.append(ord('\n'))
+    return movement_pattern
+
 if __name__ == '__main__':
     program = read_input()
-    part1(program)
+    # part1(program)
+    part2(program)
