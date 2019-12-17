@@ -10,21 +10,7 @@ def read_input():
 def part1(program):
     computer = IntcodeComputer(program)
     it = computer.run()
-
-    try:
-        rows = []
-        line = []
-        while True:
-            output = next(it)
-            if output == 10:
-                rows.append(line)
-                line = []
-            else:
-                line.append(output)
-
-            print(chr(output), end='')
-    except StopIteration:
-        pass
+    rows = get_camera_feed(it)
 
     intersections = set()
     scaffold = ord('#')
@@ -38,7 +24,22 @@ def part1(program):
             except IndexError:
                 pass
 
-    print(sum([x * y for x, y in intersections]))
+    print(f'Part 1: {sum([x * y for x, y in intersections])}')
+
+def get_camera_feed(it):
+    rows = []
+    line = []
+    try:
+        while True:
+            output = next(it)
+            if output == 10:
+                rows.append(line)
+                line = []
+            else:
+                line.append(output)
+    except StopIteration:
+        pass
+    return rows
 
 if __name__ == '__main__':
     program = read_input()
