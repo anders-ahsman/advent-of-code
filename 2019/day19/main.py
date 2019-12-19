@@ -8,47 +8,39 @@ def read_input():
     return program
 
 def part1(program):
-    computer = IntcodeComputer(program)
-    it = computer.run()
-
+    space = {}
+    limit = 50
     x = 0
     y = 0
-    ones = 0
-    while x < 50 and y < 50:
+    last_output_for_row = None
+    while y < limit:
+        computer = IntcodeComputer(program)
+        it = computer.run()
+
         try:
-            # print(x,y)
-            computer = IntcodeComputer(program)
-            it = computer.run()
             computer.inputs.append(x)
             computer.inputs.append(y)
-            x += 1
-            if (x == 50):
+            output = next(it)
+            space[(x, y)] = output
+
+            end_of_beam_for_row = output == 0 and last_output_for_row == 1
+            if end_of_beam_for_row:
                 x = 0
                 y += 1
-            output = next(it)
-            if output == 1:
-                ones += 1
+                last_output_for_row = None
+            else:
+                last_output_for_row = output
+                x += 1
+                if x == limit:
+                    x = 0
+                    y += 1
+                    last_output_for_row = None
 
         except StopIteration:
             pass
 
-    print(ones)
-    # rows = get_camera_feed(it)
-
-    # intersections = set()
-    # scaffold = ord('#')
-    # for y, line in enumerate(rows):
-    #     for x, char in enumerate(line):
-    #         try:
-    #             if char == scaffold and \
-    #                 line[x-1]    == scaffold and line[x+1]    == scaffold and \
-    #                 rows[y-1][x] == scaffold and rows[y+1][x] == scaffold:
-    #                     intersections.add((x, y))
-    #         except IndexError:
-    #             pass
-
-    # print(f'Part 1: {sum([x * y for x, y in intersections])}')
-
+    ones = [v for v in space.values() if v == 1]
+    print('Part 1:', len(ones))
 
 if __name__ == '__main__':
     program = read_input()
