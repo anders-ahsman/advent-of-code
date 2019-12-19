@@ -8,11 +8,25 @@ def read_input():
     return program
 
 def part1(program):
-    space = {}
     limit = 50
+    space = scan_space(program, limit)
+
+    for y in range(limit):
+        for x in range(limit):
+            if (x, y) in space:
+                print('#' if space[(x, y)] == 1 else '.', end='')
+            else:
+                print('?', end='')
+        print()
+
+    beam_point_count = sum([1 for beam in space.values() if beam == 1])
+    print('Part 1:', beam_point_count)
+
+def scan_space(program, limit):
+    space = {}
     x = 0
     y = 0
-    last_output_for_row = None
+    prev_output_for_row = None
     while y < limit:
         computer = IntcodeComputer(program)
         it = computer.run()
@@ -23,24 +37,23 @@ def part1(program):
             output = next(it)
             space[(x, y)] = output
 
-            end_of_beam_for_row = output == 0 and last_output_for_row == 1
+            end_of_beam_for_row = output == 0 and prev_output_for_row == 1
             if end_of_beam_for_row:
-                x = 0
+                beam_start_for_row = min([pos[0] for pos, beam in space.items() if beam and pos[1] == y])
+                x = beam_start_for_row - 1
                 y += 1
-                last_output_for_row = None
+                prev_output_for_row = None
             else:
-                last_output_for_row = output
+                prev_output_for_row = output
                 x += 1
                 if x == limit:
                     x = 0
                     y += 1
-                    last_output_for_row = None
-
+                    prev_output_for_row = None
         except StopIteration:
             pass
 
-    ones = [v for v in space.values() if v == 1]
-    print('Part 1:', len(ones))
+    return space
 
 if __name__ == '__main__':
     program = read_input()
