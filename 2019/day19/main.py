@@ -27,6 +27,7 @@ def scan_space(program, limit):
     x = 0
     y = 0
     prev_output_for_row = None
+
     while y < limit:
         computer = IntcodeComputer(program)
         it = computer.run()
@@ -55,6 +56,27 @@ def scan_space(program, limit):
 
     return space
 
+def part2(program):
+    limit = 1300
+    space = scan_space(program, limit)
+
+    size = 100
+    for y in range(limit):
+        for x in range(limit):
+            does_fit = fits_at(size, space, x, y)
+            if does_fit:
+                print(f'Part 2: {x * 10000 + y}')
+                return
+    print('Does not fit')
+
+def fits_at(size, space, x_start, y_start):
+    for y in range(y_start, y_start + size):
+        for x in range(x_start, x_start + size):
+            if (x, y) not in space or space[(x, y)] != 1:
+                return False
+    return True
+
 if __name__ == '__main__':
     program = read_input()
-    part1(program)
+    # part1(program)
+    part2(program)
