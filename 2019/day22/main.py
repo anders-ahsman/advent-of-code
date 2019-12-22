@@ -21,8 +21,7 @@ def part1(shuffles):
     print('Part 1:', deck.index(2019))
 
 def cut(deck, count):
-    shuffled = deck[count:] + deck[:count]
-    return shuffled
+    return deck[count:] + deck[:count]
 
 def deal_into_new_stack(deck):
     deck.reverse()
@@ -30,14 +29,21 @@ def deal_into_new_stack(deck):
 
 def deal_with_increment(deck, increment):
     deck_size = len(deck)
-    shuffled = [None] * deck_size
-    pos = 0
-    while deck:
-        shuffled[pos] = deck[0]
-        deck = deck[1:]
-        pos += increment
-        pos = pos % deck_size
-    return shuffled
+    pos_table = 0
+    temp = {}
+    for pos_deck in range(deck_size):
+        if pos_deck in temp:
+            card_to_place = temp[pos_deck]
+            del(temp[pos_deck])
+        else:
+            card_to_place = deck[pos_deck]
+
+        if card_to_place != deck[pos_table]:
+            temp[pos_table] = deck[pos_table]
+            deck[pos_table] = card_to_place
+
+        pos_table = (pos_table + increment) % deck_size
+    return deck
 
 if __name__ == '__main__':
     shuffles = read_input()
