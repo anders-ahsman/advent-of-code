@@ -1,6 +1,5 @@
 from collections import defaultdict
 from enum import Enum
-from itertools import permutations
 
 class Mode(Enum):
     POSITION = 0
