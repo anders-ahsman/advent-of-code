@@ -39,8 +39,6 @@ class IntcodeComputer:
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
@@ -53,8 +51,6 @@ class IntcodeComputer:
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
@@ -91,8 +87,6 @@ class IntcodeComputer:
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
@@ -105,8 +99,6 @@ class IntcodeComputer:
 
                 if mode3 == Mode.POSITION:
                     self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.IMMEDIATE:
-                    self.program[self.idx + 3] = result
                 elif mode3 == Mode.RELATIVE:
                     self.program[self.relative_base + self.program[self.idx + 3]] = result
                 else:
