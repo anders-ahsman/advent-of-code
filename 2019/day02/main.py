@@ -16,8 +16,8 @@ def part1(program):
         while True:
             next(it)
     except StopIteration:
-        value = computer.program[0]
-        print(f'part1: {value}')
+        output = computer.program[0]
+        print(f'part1: {output}')
 
 def part2(program):
     expected = 19690720
@@ -32,8 +32,8 @@ def part2(program):
                 while True:
                     next(it)
             except StopIteration:
-                value = computer.program[0]
-                if value == expected:
+                output = computer.program[0]
+                if output == expected:
                     print(f'part2: {100 * noun + verb}')
 
 if __name__ == '__main__':
