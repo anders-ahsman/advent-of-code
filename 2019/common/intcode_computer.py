@@ -46,8 +46,7 @@ class IntcodeComputer:
                 self.idx += 4
 
             elif instruction == Instruction.INPUT:
-                indata = self.inputs[0]
-                self.inputs = self.inputs[1:]
+                indata =  self.inputs.pop(0)
                 self.set_value(mode1, 1, indata)
                 self.idx += 2
 
