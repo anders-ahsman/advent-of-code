@@ -30,8 +30,8 @@ class IntcodeComputer:
     def run(self):
         while True:
             opcode = self.program[self.idx]
+            instruction = self.get_instruction(opcode)
             mode1, mode2, mode3 = self.get_modes(opcode)
-            instruction = Instruction(int(str(opcode)[-2:]))
 
             if instruction == Instruction.ADD:
                 param1, param2 = self.get_params(mode1, mode2)
@@ -89,6 +89,9 @@ class IntcodeComputer:
     def get_modes(self, opcode):
         mode3, mode2, mode1 = [Mode(int(m)) for m in list(f'{opcode:05}'[:3])]
         return mode1, mode2, mode3
+
+    def get_instruction(self, opcode):
+        return Instruction(int(str(opcode)[-2:]))
 
     def get_params(self, mode1, mode2):
         return self.get_param(mode1, 1), self.get_param(mode2, 2)
