@@ -36,37 +36,19 @@ class IntcodeComputer:
             if instruction == Instruction.ADD:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = param1 + param2
-
-                if mode3 == Mode.POSITION:
-                    self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.idx + 3]] = result
-                else:
-                    raise Exception(f'Unknown mode {mode3}')
+                self.set_value(mode3, 3, result)
                 self.idx += 4
 
             elif instruction == Instruction.MULTIPLY:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = param1 * param2
-
-                if mode3 == Mode.POSITION:
-                    self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.idx + 3]] = result
-                else:
-                    raise Exception(f'Unknown mode {mode3}')
+                self.set_value(mode3, 3, result)
                 self.idx += 4
 
             elif instruction == Instruction.INPUT:
                 indata = self.inputs[0]
                 self.inputs = self.inputs[1:]
-
-                if mode1 == Mode.POSITION:
-                    self.program[self.program[self.idx + 1]] = indata
-                elif mode1 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.idx + 1]] = indata
-                else:
-                    raise Exception(f'Unknown mode {mode1}')
+                self.set_value(mode1, 1, indata)
                 self.idx += 2
 
             elif instruction == Instruction.OUTPUT:
@@ -84,25 +66,13 @@ class IntcodeComputer:
             elif instruction == Instruction.LESS_THAN:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = int(param1 < param2)
-
-                if mode3 == Mode.POSITION:
-                    self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.idx + 3]] = result
-                else:
-                    raise Exception(f'Unknown mode {mode3}')
+                self.set_value(mode3, 3, result)
                 self.idx += 4
 
             elif instruction == Instruction.EQUALS:
                 param1, param2 = self.get_params(mode1, mode2)
                 result = int(param1 == param2)
-
-                if mode3 == Mode.POSITION:
-                    self.program[self.program[self.idx + 3]] = result
-                elif mode3 == Mode.RELATIVE:
-                    self.program[self.relative_base + self.program[self.idx + 3]] = result
-                else:
-                    raise Exception(f'Unknown mode {mode3}')
+                self.set_value(mode3, 3, result)
                 self.idx += 4
 
             elif instruction == Instruction.ADJUST_RELATIVE_BASE:
@@ -132,3 +102,11 @@ class IntcodeComputer:
             return self.program[self.relative_base + self.program[self.idx + offset]]
 
         raise Exception(f'Unknown mode {mode}')
+
+    def set_value(self, mode, offset, value):
+        if mode == Mode.POSITION:
+            self.program[self.program[self.idx + offset]] = value
+        elif mode == Mode.RELATIVE:
+            self.program[self.relative_base + self.program[self.idx + offset]] = value
+        else:
+            raise Exception(f'Unknown mode {mode}')
