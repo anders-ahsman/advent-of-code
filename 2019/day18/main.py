@@ -27,13 +27,13 @@ def part1(maze):
 
 def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
     frontier = deque([initial])
-    nodes_to_parents = {initial: None}
+    distance = {initial: 0}
     while frontier:
         node = frontier.popleft()
         value = maze[node]
         if pattern_key.match(value) and value not in keys:
             keys.add(value)
-            depth = steps_between_nodes(node, initial, nodes_to_parents)
+            depth = distance[node] - distance[initial]
             print(f'*** depth: {depth} from {node} ({value}) to {initial} ({maze[initial]})')
             if keys == keys_to_collect:
                 print('added last key')
@@ -42,20 +42,12 @@ def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
             return depth + min_steps_to_keys(maze, node, keys_to_collect, keys) # restart from here equipped with new key
 
         for neighbour in get_neighbours(maze, node, keys):
-            if neighbour in nodes_to_parents:
+            if neighbour in distance:
                 continue
             frontier.append(neighbour)
-            nodes_to_parents[neighbour] = node
+            distance[neighbour] = distance[node] + 1
 
     return None # went through everything and never found goal
-
-def steps_between_nodes(node_from, node_to, nodes_to_parents):
-    steps = 1
-    parent = nodes_to_parents[node_from]
-    while parent != node_to:
-        steps += 1
-        parent = nodes_to_parents[parent]
-    return steps
 
 def get_neighbours(maze, node, keys):
     x, y = node
