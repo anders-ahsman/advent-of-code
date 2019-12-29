@@ -33,7 +33,7 @@ def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
         value = maze[node]
         if pattern_key.match(value) and value not in keys:
             keys.add(value)
-            depth = steps_to_node(node, initial, nodes_to_parents)
+            depth = steps_between_nodes(node, initial, nodes_to_parents)
             print(f'*** depth: {depth} from {node} ({value}) to {initial} ({maze[initial]})')
             if keys == keys_to_collect:
                 print('added last key')
@@ -49,7 +49,7 @@ def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
 
     return None # went through everything and never found goal
 
-def steps_to_node(node_from, node_to, nodes_to_parents):
+def steps_between_nodes(node_from, node_to, nodes_to_parents):
     steps = 1
     parent = nodes_to_parents[node_from]
     while parent != node_to:
