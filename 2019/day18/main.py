@@ -27,8 +27,7 @@ def part1(maze):
 
 def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
     frontier = deque([initial])
-    explored = {initial}
-    nodes_to_parents = {}
+    nodes_to_parents = {initial: None}
     while frontier:
         node = frontier.popleft()
         value = maze[node]
@@ -43,10 +42,9 @@ def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
             return depth + min_steps_to_keys(maze, node, keys_to_collect, keys) # restart from here equipped with new key
 
         for neighbour in get_neighbours(maze, node, keys):
-            if neighbour in explored:
+            if neighbour in nodes_to_parents:
                 continue
             frontier.append(neighbour)
-            explored.add(neighbour)
             nodes_to_parents[neighbour] = node
 
     return None # went through everything and never found goal
