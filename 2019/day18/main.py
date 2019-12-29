@@ -9,8 +9,7 @@ def read_input():
     maze = {}
     for y, line in enumerate(sys.stdin):
         for x, char in enumerate(line.rstrip()):
-            if char != '#':
-                maze[(x, y)] = char
+            maze[(x, y)] = char
     return maze
 
 def part1(maze):
