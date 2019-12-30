@@ -31,15 +31,15 @@ def min_steps(maze, starts, havekeys):
 
     keys = reachable4(maze, starts, havekeys)
     if not len(keys):
-        answer = 0
+        steps = 0
     else:
         possibilities = []
         for ch, (dist, pt, roi) in keys.items():
             nstarts = tuple(pt if i == roi else s for i, s in enumerate(starts))
             possibilities.append(dist + min_steps(maze, nstarts, havekeys + ch))
-        answer = min(possibilities)
-    seen[(starts, sortedhavekeys)] = answer
-    return answer
+        steps = min(possibilities)
+    seen[(starts, sortedhavekeys)] = steps
+    return steps
 
 def reachable4(maze, starts, havekeys):
     keys = {}
