@@ -12,32 +12,41 @@ def read_input():
             maze[(x, y)] = char
     return maze
 
-def part1(maze):
+def print_maze(maze):
     for y in range(max(pt[1] for pt in maze) + 1):
         for x in range(max(pt[0] for pt in maze) + 1):
             output = maze[(x, y)] if (x, y) in maze else ' '
             print(output, end='')
         print()
 
-    start = next(pt for pt, ch in maze.items() if ch == '@')
-    print('part 1:', min_steps(maze, start, ''))
+def part1_and_2(maze):
+    starts = tuple(pt for pt, ch in maze.items() if ch == '@')
+    print('Min steps:', min_steps(maze, starts, ''))
 
 seen = {}
-def min_steps(maze, start, havekeys):
+def min_steps(maze, starts, havekeys):
     sortedhavekeys = ''.join(sorted(havekeys))
-    if (start, sortedhavekeys) in seen:
-        return seen[(start, sortedhavekeys)]
+    if (starts, sortedhavekeys) in seen:
+        return seen[(starts, sortedhavekeys)]
 
-    keys = reachable_keys(maze, start, havekeys)
+    keys = reachable4(maze, starts, havekeys)
     if not len(keys):
         answer = 0
     else:
         possibilities = []
-        for key, (dist, pt) in keys.items():
-            possibilities.append(dist + min_steps(maze, pt, havekeys + key))
+        for ch, (dist, pt, roi) in keys.items():
+            nstarts = tuple(pt if i == roi else s for i, s in enumerate(starts))
+            possibilities.append(dist + min_steps(maze, nstarts, havekeys + ch))
         answer = min(possibilities)
-    seen[(start, sortedhavekeys)] = answer
+    seen[(starts, sortedhavekeys)] = answer
     return answer
+
+def reachable4(maze, starts, havekeys):
+    keys = {}
+    for i, start in enumerate(starts):
+        for ch, (dist, pt) in reachable_keys(maze, start, havekeys).items():
+            keys[ch] = dist, pt, i
+    return keys
 
 def reachable_keys(maze, start, havekeys):
     frontier = deque([start])
@@ -67,4 +76,5 @@ def get_neighbours(maze, node, havekeys):
 
 if __name__ == '__main__':
     maze = read_input()
-    part1(maze)
+    print_maze(maze)
+    part1_and_2(maze)
