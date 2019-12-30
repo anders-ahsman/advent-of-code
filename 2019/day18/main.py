@@ -13,49 +13,56 @@ def read_input():
     return maze
 
 def part1(maze):
-    for y in range(max(pos[1] for pos in maze) + 1):
-        for x in range(max(pos[0] for pos in maze) + 1):
+    for y in range(max(pt[1] for pt in maze) + 1):
+        for x in range(max(pt[0] for pt in maze) + 1):
             output = maze[(x, y)] if (x, y) in maze else ' '
             print(output, end='')
         print()
 
-    initial = next(pos for pos, value in maze.items() if value == '@')
-    keys_to_collect = {value for key, value in maze.items() if pattern_key.match(value)}
-    steps = min_steps_to_keys(maze, initial, keys_to_collect)
-    print(f'steps: {steps}')
+    start = next(pt for pt, ch in maze.items() if ch == '@')
+    print('part 1:', min_steps(maze, start, ''))
 
-def min_steps_to_keys(maze, initial, keys_to_collect, keys=set()):
-    frontier = deque([initial])
-    distance = {initial: 0}
+seen = {}
+def min_steps(maze, start, havekeys):
+    sortedhavekeys = ''.join(sorted(havekeys))
+    if (start, sortedhavekeys) in seen:
+        return seen[(start, sortedhavekeys)]
+
+    keys = reachable_keys(maze, start, havekeys)
+    if not len(keys):
+        answer = 0
+    else:
+        possibilities = []
+        for key, (dist, pt) in keys.items():
+            possibilities.append(dist + min_steps(maze, pt, havekeys + key))
+        answer = min(possibilities)
+    seen[(start, sortedhavekeys)] = answer
+    return answer
+
+def reachable_keys(maze, start, havekeys):
+    frontier = deque([start])
+    distance = {start: 0}
+    keys = {}
     while frontier:
-        node = frontier.popleft()
-        value = maze[node]
-        if pattern_key.match(value) and value not in keys:
-            keys.add(value)
-            depth = distance[node] - distance[initial]
-            print(f'*** depth: {depth} from {node} ({value}) to {initial} ({maze[initial]})')
-            if keys == keys_to_collect:
-                print('added last key')
-                return depth
-            print(f'added key {value}, recursive step')
-            return depth + min_steps_to_keys(maze, node, keys_to_collect, keys) # restart from here equipped with new key
-
-        for neighbour in get_neighbours(maze, node, keys):
+        pt = frontier.popleft()
+        ch = maze[pt]
+        if pattern_key.match(ch) and ch not in havekeys:
+            keys[ch] = distance[pt], pt
+            continue # do not explore neighbours of found key
+        for neighbour in get_neighbours(maze, pt, havekeys):
             if neighbour in distance:
                 continue
             frontier.append(neighbour)
-            distance[neighbour] = distance[node] + 1
+            distance[neighbour] = distance[pt] + 1
+    return keys
 
-    return None # went through everything and never found goal
-
-def get_neighbours(maze, node, keys):
-    x, y = node
+def get_neighbours(maze, node, havekeys):
     neighbours = set()
-    for pos, value in maze.items():
-        if pos not in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
-            continue
-        if pattern_accessible.match(value) or (pattern_door.match(value) and value.lower() in keys):
-            neighbours.add(pos)
+    x, y = node
+    for pt in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
+        ch = maze[pt]
+        if pattern_accessible.match(ch) or (pattern_door.match(ch) and ch.lower() in havekeys):
+            neighbours.add(pt)
     return neighbours
 
 if __name__ == '__main__':
