@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+from string import ascii_uppercase
 import sys
 
 def read_input():
@@ -24,7 +25,7 @@ def get_portals(maze):
     maxposy = len(maze) - 1
     for y, row in enumerate(maze):
         for x, ch in enumerate(row):
-            if is_letter(ch):
+            if ch in ascii_uppercase:
                 for pt2 in [
                     (x + 1, y),
                     (x, y + 1)
@@ -33,7 +34,7 @@ def get_portals(maze):
                         ch2 = maze[pt2[1]][pt2[0]]
                     except IndexError:
                         continue # outside of map
-                    if is_letter(ch2):
+                    if ch2 in ascii_uppercase:
                         label = ch + ch2
                         pt = (x, y)
                         is_outside = any(p[0] in [0, maxposx] or p[1] in [0, maxposy] for p in [pt, pt2])
@@ -57,9 +58,6 @@ def get_portals(maze):
         portals[p1] = (p2, outside1)
         portals[p2] = (p1, outside2)
     return portals, start, end
-
-def is_letter(ch):
-    return 'A' <= ch <= 'Z'
 
 def bfs(maze, start, end, portals, use_levels):
     frontier = deque([start])
@@ -89,7 +87,7 @@ def get_neighbours(maze, node, portals, lvl, use_levels):
             continue # outside map
         if ch == '.':
             neighbours.add((pt, lvl))
-        elif is_letter(ch) and node in portals:
+        elif ch in ascii_uppercase and node in portals:
             other_side, is_outside = portals[node]
             if use_levels:
                 if lvl == 0 and is_outside:
