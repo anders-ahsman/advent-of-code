@@ -3,7 +3,7 @@ from string import ascii_uppercase
 import sys
 
 def read_input():
-    return [l.rstrip() for l in sys.stdin]
+    return [l.rstrip('\n') for l in sys.stdin]
 
 def print_maze(maze):
     for row in maze:
@@ -21,29 +21,25 @@ def part2(maze):
 
 def get_portals(maze):
     labels_to_portals = defaultdict(list)
-    maxposx = max(len(row) for row in maze) - 1
-    maxposy = len(maze) - 1
     for y, row in enumerate(maze):
         for x, ch in enumerate(row):
-            if ch in ascii_uppercase:
-                for pt2 in [
-                    (x + 1, y),
-                    (x, y + 1)
-                ]:
-                    try:
-                        ch2 = maze[pt2[1]][pt2[0]]
-                    except IndexError:
-                        continue # outside of map
-                    if ch2 in ascii_uppercase:
-                        label = ch + ch2
-                        pt = (x, y)
-                        is_outside = any(p[0] in [0, maxposx] or p[1] in [0, maxposy] for p in [pt, pt2])
-                        for p in [pt, pt2]:
-                            nbs = get_neighbours(maze, p, {}, 0, False)
-                            if nbs:
-                                tile, _ = nbs.pop()
-                                labels_to_portals[label].append((tile, is_outside))
-                                continue
+            if ch not in ascii_uppercase:
+                continue
+            for pt2 in [(x + 1, y), (x, y + 1)]:
+                if pt2[0] > W or pt2[1] > H:
+                    continue
+                ch2 = maze[pt2[1]][pt2[0]]
+                if ch2 not in ascii_uppercase:
+                    continue
+                label = ch + ch2
+                pt = (x, y)
+                is_outside = any(p[0] in [0, W] or p[1] in [0, H] for p in [pt, pt2])
+                for p in [pt, pt2]:
+                    nbs = get_neighbours(maze, p, {}, 0, False)
+                    if nbs:
+                        tile, _ = nbs.pop()
+                        labels_to_portals[label].append((tile, is_outside))
+                        continue
 
     portals = {}
     for label, prts in labels_to_portals.items():
@@ -75,16 +71,10 @@ def bfs(maze, start, end, portals, use_levels):
 def get_neighbours(maze, node, portals, lvl, use_levels):
     neighbours = set()
     x, y = node
-    for pt in [
-        (x - 1, y),
-        (x + 1, y),
-        (x, y - 1),
-        (x, y + 1)
-    ]:
-        try:
-            ch = maze[pt[1]][pt[0]]
-        except IndexError:
-            continue # outside map
+    for pt in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
+        if pt[0] > W or pt[1] > H:
+            continue
+        ch = maze[pt[1]][pt[0]]
         if ch == '.':
             neighbours.add((pt, lvl))
         elif ch in ascii_uppercase and node in portals:
@@ -98,8 +88,9 @@ def get_neighbours(maze, node, portals, lvl, use_levels):
                 neighbours.add((other_side, 0))
     return neighbours
 
-if __name__ == '__main__':
-    maze = read_input()
-    print_maze(maze)
-    part1(maze)
-    part2(maze)
+maze = read_input()
+W = len(maze[0]) - 1 # Assumes lines are equally long
+H = len(maze) - 1
+print_maze(maze)
+part1(maze)
+part2(maze)
