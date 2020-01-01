@@ -12,58 +12,69 @@ def print_maze(maze):
 
 def part1(maze):
     portals, start, end = get_portals(maze)
-    print('Part 1:', bfs(maze, start, end, portals))
+    print('Part 1:', bfs(maze, start, end, portals, use_levels=False))
+
+def part2(maze):
+    portals, start, end = get_portals(maze)
+    print('Part 2:', bfs(maze, start, end, portals, use_levels=True))
 
 def get_portals(maze):
     labels_to_portals = defaultdict(list)
+    maxposx = max(len(row) for row in maze) - 1
+    maxposy = len(maze) - 1
     for y, row in enumerate(maze):
         for x, ch in enumerate(row):
             if is_letter(ch):
-                for pt in [
+                for pt2 in [
                     (x + 1, y),
                     (x, y + 1)
                 ]:
                     try:
-                        ch2 = maze[pt[1]][pt[0]]
+                        ch2 = maze[pt2[1]][pt2[0]]
                     except IndexError:
                         continue # outside of map
                     if is_letter(ch2):
-                        key = ch + ch2
-                        for p in [pt, (x, y)]:
-                            nbs = get_neighbours(maze, p, {})
+                        label = ch + ch2
+                        pt = (x, y)
+                        is_outside = any(p[0] in [0, maxposx] or p[1] in [0, maxposy] for p in [pt, pt2])
+                        for p in [pt, pt2]:
+                            nbs = get_neighbours(maze, p, {}, 0, False)
                             if nbs:
-                                tile = nbs.pop()
-                                break
-                        labels_to_portals[key].append(tile)
+                                tile, _ = nbs.pop()
+                                labels_to_portals[label].append((tile, is_outside))
+                                continue
+
     portals = {}
-    for label, pts in labels_to_portals.items():
+    for label, prts in labels_to_portals.items():
+        p1, outside1 = prts[0]
         if label == 'AA':
-            start = pts[0]
+            start = (p1, 0)
             continue
         if label == 'ZZ':
-            end = pts[0]
+            end = (p1, 0)
             continue
-        portals[pts[0]] = pts[1]
-        portals[pts[1]] = pts[0]
+        p2, outside2 = prts[1]
+        portals[p1] = (p2, outside1)
+        portals[p2] = (p1, outside2)
     return portals, start, end
 
 def is_letter(ch):
     return 'A' <= ch <= 'Z'
 
-def bfs(maze, start, target, portals):
+def bfs(maze, start, end, portals, use_levels):
     frontier = deque([start])
     distance = {start: 0}
     while frontier:
-        h = frontier.popleft()
-        if h == target:
-            return distance[h]
-        for nb in get_neighbours(maze, h, portals):
-            if nb in distance:
+        h, lvl = frontier.popleft()
+        if (h, lvl) == end:
+            return distance[(h, lvl)]
+        for nb, nblvl in get_neighbours(maze, h, portals, lvl, use_levels):
+            if (nb, nblvl) in distance:
                 continue
-            distance[nb] = distance[h] + 1
-            frontier.append(nb)
+            distance[(nb, nblvl)] = distance[(h, lvl)] + 1
+            frontier.append((nb, nblvl))
 
-def get_neighbours(maze, node, portals):
+def get_neighbours(maze, node, portals, lvl, use_levels):
     neighbours = set()
     x, y = node
     for pt in [
@@ -74,15 +85,23 @@ def get_neighbours(maze, node, portals):
     ]:
         try:
             ch = maze[pt[1]][pt[0]]
-            if ch == '.':
-                neighbours.add(pt)
-            if is_letter(ch) and node in portals:
-                neighbours.add(portals[node]) # get other end of portal
         except IndexError:
-            pass # outside map
+            continue # outside map
+        if ch == '.':
+            neighbours.add((pt, lvl))
+        elif is_letter(ch) and node in portals:
+            other_side, is_outside = portals[node]
+            if use_levels:
+                if lvl == 0 and is_outside:
+                    continue
+                newlvl = lvl - 1 if is_outside else lvl + 1
+                neighbours.add((other_side, newlvl))
+            else:
+                neighbours.add((other_side, 0))
     return neighbours
 
 if __name__ == '__main__':
     maze = read_input()
     print_maze(maze)
     part1(maze)
+    part2(maze)
