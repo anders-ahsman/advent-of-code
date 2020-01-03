@@ -38,13 +38,13 @@ def vaporize_by_laser(astroids, station_pos):
     count = 0
     distance_to_station = lambda pos: get_distance(station_pos, pos)
     while astroids:
-        angle_to_posistions = defaultdict(list)
+        angle_to_positions = defaultdict(list)
         for pos in astroids:
             angle = get_angle(station_pos, pos)
-            angle_to_posistions[angle].append(pos)
-        for angle in sorted(angle_to_posistions.keys()):
-            sorted_by_distance = sorted(angle_to_posistions[angle], key=distance_to_station)
-            closest = sorted_by_distance[0]
+            angle_to_positions[angle].append(pos)
+        for angle in sorted(angle_to_positions.keys()):
+            positions_by_distance = sorted(angle_to_positions[angle], key=distance_to_station)
+            closest = positions_by_distance[0]
             astroids.remove(closest)
             count += 1
             if count == 200:
