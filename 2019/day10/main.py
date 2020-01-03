@@ -1,6 +1,5 @@
 from collections import defaultdict
-from math import atan2, sqrt
-import sys
+import math, sys
 
 def read_input():
     astroids = set()
@@ -32,16 +31,40 @@ def calc_best_position(astroids):
             max_visible = len(visible)
             max_pos = pos
 
-    print(max_pos, max_visible)
+    return max_pos, max_visible
+
+def vaporize_by_laser(astroids, station_pos):
+    astroids.remove(station_pos)
+    count = 0
+    key_distance=lambda pos: get_distance(station_pos, pos)
+    while astroids:
+        angle_to_posistions = defaultdict(list)
+        for pos in astroids:
+            angle = get_angle(station_pos, pos)
+            angle_to_posistions[angle].append(pos)
+        for angle in sorted(angle_to_posistions.keys()):
+            sorted_by_distance = sorted(angle_to_posistions[angle], key=key_distance)
+            closest = sorted_by_distance[0]
+            astroids.remove(closest)
+            count += 1
+            if count == 200:
+                return closest
 
 def get_angle(a, b):
     dx = b[0] - a[0]
-    dy = b[1] - a[1]
-    return atan2(dy, dx)
+    dy = -(b[1] - a[1])
+    angle = math.atan2(dy, dx) * 180 / math.pi
+    return (90 - angle) % 360
 
 def get_distance(a, b):
-    return sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
+    dx = b[0] - a[0]
+    dy = b[1] - a[1]
+    return math.sqrt(dx ** 2 + dy ** 2)
 
 if __name__ == '__main__':
     astroids = read_input()
-    calc_best_position(astroids)
+    max_pos, max_visible = calc_best_position(astroids)
+    print('Part 1:', max_visible)
+    n200 = vaporize_by_laser(astroids, max_pos)
+    x, y = n200
+    print('Part 2:', x * 100 + y)
