@@ -36,14 +36,14 @@ def calc_best_position(astroids):
 def vaporize_by_laser(astroids, station_pos):
     astroids.remove(station_pos)
     count = 0
-    key_distance=lambda pos: get_distance(station_pos, pos)
+    distance_to_station = lambda pos: get_distance(station_pos, pos)
     while astroids:
         angle_to_posistions = defaultdict(list)
         for pos in astroids:
             angle = get_angle(station_pos, pos)
             angle_to_posistions[angle].append(pos)
         for angle in sorted(angle_to_posistions.keys()):
-            sorted_by_distance = sorted(angle_to_posistions[angle], key=key_distance)
+            sorted_by_distance = sorted(angle_to_posistions[angle], key=distance_to_station)
             closest = sorted_by_distance[0]
             astroids.remove(closest)
             count += 1
@@ -58,7 +58,7 @@ def get_angle(a, b):
 
 def get_distance(a, b):
     dx = b[0] - a[0]
-    dy = b[1] - a[1]
+    dy = -(b[1] - a[1])
     return math.sqrt(dx ** 2 + dy ** 2)
 
 if __name__ == '__main__':
