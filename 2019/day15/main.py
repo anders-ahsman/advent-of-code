@@ -33,7 +33,7 @@ def part1(screen, program):
     curses.curs_set(False)
     com = IntcodeComputer(program)
     it = com.run()
-    start_pos = (25, 25)
+    start_pos = (25, 26)
     pos = start_pos
     grid = {pos: '.'}
     direction = 1
@@ -49,6 +49,8 @@ def part1(screen, program):
     end_pos = next(k for k, v in grid.items() if v == '!')
     steps_min = bfs(start_pos, end_pos, grid)
     screen.addstr(2, 0, f'min steps from {start_pos} to {end_pos}: {steps_min}')
+    steps_oxygen = fill_oxygen_steps_required(grid, end_pos, screen)
+    screen.addstr(3, 0, f'steps to fill area with oxygen: {steps_oxygen}')
     screen.getch()
 
 def move(pos, direction, grid, com, it):
@@ -89,6 +91,17 @@ def bfs(start, end, grid):
 def get_nbs_from_grid(pos, grid):
     x, y = pos
     return [(i, j) for i, j in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]]
+
+def fill_oxygen_steps_required(grid, start, screen):
+    steps = 0
+    grid[start] = 'O'
+    while '.' in grid.values():
+        for pos in [k for k, v in grid.items() if v == 'O']:
+            for nb in get_nbs_from_grid(pos, grid):
+                if grid[nb] == '.':
+                    grid[nb] = 'O'
+        steps += 1
+    return steps
 
 filename = sys.argv[1]
 program = read_input(filename)
