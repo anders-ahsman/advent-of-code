@@ -13,10 +13,10 @@ def part1(program):
 
     # !(A and B and C) and D
     instructions = [
-        'OR A T', # T starts out empty, copy A to T
-        'AND B T',
-        'AND C T',
-        'NOT T J',
+        'OR A J',
+        'AND B J',
+        'AND C J',
+        'NOT J J',
         'AND D J',
         'WALK']
     for instruction in instructions:
@@ -24,6 +24,31 @@ def part1(program):
             computer.inputs.append(ord(char))
         computer.inputs.append(10)
 
+    run_until_stop(it)
+
+def part2(program):
+    computer = IntcodeComputer(program)
+    it = computer.run()
+
+    # (!(A and B and C) and D) and (E or H)
+    instructions = [
+        'OR A J',
+        'AND B J',
+        'AND C J',
+        'NOT J J',
+        'AND D J',
+        'OR E T',
+        'OR H T',
+        'AND T J',
+        'RUN']
+    for instruction in instructions:
+        for char in instruction:
+            computer.inputs.append(ord(char))
+        computer.inputs.append(10)
+
+    run_until_stop(it)
+
+def run_until_stop(it):
     while True:
         try:
             output = next(it)
@@ -32,7 +57,9 @@ def part1(program):
             else:
                 print(output)
         except StopIteration:
+            print()
             break
 
 program = read_input()
 part1(program)
+part2(program)
