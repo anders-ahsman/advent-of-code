@@ -15,9 +15,10 @@ def get(x, wires):
         return int(x)
     return wires[x]
 
-def part1(instructions):
+def part1and2(instructions):
     wires = defaultdict(lambda: None)
     pattern = r'(\w+)??\s*(\w+)??\s*(\w+)\s->\s(\w+)'
+    part_one_answer = None
     while not wires['a']:
         for instruction in instructions:
             a, op, b, dest = re.findall(pattern, instruction)[0]
@@ -43,7 +44,14 @@ def part1(instructions):
             else:
                 raise Exception(f'Unknown operator {op}')
 
-    return wires['a']
+            if not part_one_answer and wires['a']:
+                part_one_answer = wires['a']
+                print('Part 1:', part_one_answer)
+                wires = defaultdict(lambda: None)
+            if part_one_answer and dest == 'b':
+                wires[dest] = part_one_answer
+
+    print('Part 2:', wires['a'])
 
 instructions = read_input()
-print('Part 1:', part1(instructions))
+part1and2(instructions)
