@@ -7,21 +7,20 @@ def read_input():
     return strings
 
 def part1(strings):
-    total_code = 0
-    total_value = 0
-    for str_code in strings:
-        total_code += len(str_code)
-        str_value = eval(str_code)
-        total_value += len(str_value)
-    return total_code - total_value
+    literal_count = 0
+    actual_count = 0
+    for literal_str in strings:
+        literal_count += len(literal_str)
+        actual_count += len(eval(literal_str))
+    return literal_count - actual_count
 
 def part2(strings):
-    total_code = 0
-    total_encoded = 0
-    for str_code in strings:
-        total_code += len(str_code)
-        total_encoded += len(escape(str_code))
-    return total_encoded - total_code
+    literal_count = 0
+    encoded_count = 0
+    for literal_str in strings:
+        literal_count += len(literal_str)
+        encoded_count += len(escape(literal_str))
+    return encoded_count - literal_count
 
 def escape(string):
     return ('"' + string
