@@ -17,9 +17,8 @@ def increase(pw):
     return pw
 
 def is_valid(pw):
-    for forbidden in ['i', 'o', 'l']:
-        if forbidden in pw:
-            return False
+    if any(forbidden in pw for forbidden in ['i', 'o', 'l']):
+        return False
 
     increasing_straight = False
     for i in range(len(pw) - 2):
