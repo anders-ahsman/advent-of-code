@@ -18,8 +18,8 @@ for line in sys.stdin:
     calories[ingredient] = int(cal)
 
 ing1, ing2, ing3, ing4 = ingredients
-scores = {}
-scores500cal = {}
+max_score = 0
+max_score_500_cal = 0
 for i in range(100):
     for j in range(100):
         for k in range(100):
@@ -30,9 +30,9 @@ for i in range(100):
                     flav = flavor[ing1] * i + flavor[ing2] * j + flavor[ing3] * k + flavor[ing4] * l
                     text = texture[ing1] * i + texture[ing2] * j + texture[ing3] * k + texture[ing4] * l
                     score = 0 if any(x < 0 for x in [cpty, dura, flav, text]) else cpty * dura * flav * text
-                    scores[(cpty, dura, flav, text)] = score
+                    max_score = max(score, max_score)
                     if calories[ing1] * i + calories[ing2] * j + calories[ing3] * k + calories[ing4] * l == 500:
-                        scores500cal[(cpty, dura, flav, text)] = score
+                        max_score_500_cal = max(score, max_score_500_cal)
 
-print('Part 1:', max(scores.values()))
-print('Part 2:', max(scores500cal.values()))
+print('Part 1:', max_score)
+print('Part 2:', max_score_500_cal)
