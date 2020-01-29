@@ -18,7 +18,7 @@ def calc_fuel_required(mass):
     fuel_required = mass
     while True:
         fuel_required = math.trunc(fuel_required / 3) - 2
-        if (fuel_required < 0):
+        if fuel_required < 0:
             return partial_sum
         partial_sum += fuel_required
 
