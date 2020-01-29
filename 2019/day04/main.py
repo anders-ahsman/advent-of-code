@@ -9,13 +9,12 @@ def is_valid(password):
     any_adjacent_digits_same = False
     for i, digit in enumerate(digits):
         if i == 0:
-            prev_digit = digit
-        else:
-            prev_digit = digits[i - 1]
-            if digit < prev_digit:
-                return False
-            elif digit == prev_digit:
-                any_adjacent_digits_same = True
+            continue
+        prev_digit = digits[i - 1]
+        if digit < prev_digit:
+            return False
+        elif digit == prev_digit:
+            any_adjacent_digits_same = True
 
     if not any_adjacent_digits_same:
         return False
