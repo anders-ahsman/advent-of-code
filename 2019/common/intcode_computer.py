@@ -1,5 +1,7 @@
 from collections import defaultdict
 from enum import Enum
+from typing import DefaultDict, List, Tuple
+
 
 class Mode(Enum):
     POSITION = 0
@@ -19,11 +21,11 @@ class Instruction(Enum):
     ABORT = 99
 
 class IntcodeComputer:
-    def __init__(self, program):
-        self.idx = 0
-        self.relative_base = 0
-        self.inputs = []
-        self.program = defaultdict(int)
+    def __init__(self, program: List[int]):
+        self.idx: int = 0
+        self.relative_base: int = 0
+        self.inputs: List[int] = []
+        self.program: DefaultDict[int, int] = defaultdict(int)
         for i, op in enumerate(program):
             self.program[i] = op
 
@@ -85,17 +87,17 @@ class IntcodeComputer:
             else:
                 raise Exception(f'Unknown instruction {instruction}')
 
-    def get_modes(self, opcode):
+    def get_modes(self, opcode: int) -> Tuple[Mode, Mode, Mode]:
         mode3, mode2, mode1 = [Mode(int(m)) for m in list(f'{opcode:05}'[:3])]
         return mode1, mode2, mode3
 
-    def get_instruction(self, opcode):
+    def get_instruction(self, opcode: int) -> Instruction:
         return Instruction(int(str(opcode)[-2:]))
 
-    def get_params(self, mode1, mode2):
+    def get_params(self, mode1: Mode, mode2: Mode) -> Tuple[int, int]:
         return self.get_param(mode1, 1), self.get_param(mode2, 2)
 
-    def get_param(self, mode, offset):
+    def get_param(self, mode: Mode, offset: int) -> int:
         if mode == Mode.POSITION:
             return self.program[self.program[self.idx + offset]]
         elif mode == Mode.IMMEDIATE:
@@ -105,7 +107,7 @@ class IntcodeComputer:
 
         raise Exception(f'Unknown mode {mode}')
 
-    def set_value(self, mode, offset, value):
+    def set_value(self, mode: Mode, offset: int, value: int) -> None:
         if mode == Mode.POSITION:
             self.program[self.program[self.idx + offset]] = value
         elif mode == Mode.RELATIVE:
