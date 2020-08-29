@@ -1,5 +1,6 @@
 from collections import defaultdict
 import re
+from typing import List
 
 def read_input(filename):
     with open(filename, 'r') as f:
@@ -31,6 +32,30 @@ def read_checksum(room: str) -> str:
 def get_sector_id(room: str) -> int:
     return int(re.findall(r'\d+', room)[0])
 
+def dechifer(room: str) -> str:
+    sector_id = get_sector_id(room)
+    letters = room.split('-')
+    letters.pop()
+    dechifered_sentence: List[str] = []
+    for group in letters:
+        dechifered_word: List[str] = []
+        for letter in group:
+            ordinal = ord(letter)
+            for _ in range(sector_id):
+                ordinal += 1
+                if ordinal > ord('z'):
+                    ordinal = ord('a')
+            dechifered_word.append(chr(ordinal))
+        dechifered_sentence.append(''.join(dechifered_word))
+    return ' '.join(dechifered_sentence)
+
 if __name__ == '__main__':
     rooms = read_input('input.txt')
-    print(sum(get_sector_id(room) for room in rooms if is_real_room(room)))
+
+    print(f'Part 1: {sum(get_sector_id(room) for room in rooms if is_real_room(room))}')
+
+    for room in rooms:
+        if is_real_room(room):
+            dechifered = dechifer(room)
+            if 'northpole' in dechifered:
+                print(f'Part 2: {get_sector_id(room)}')
