@@ -11,6 +11,12 @@ def measure_distance(instructions, stop_when_already_visited):
     angle = 0
     visited: Set[Tuple[int, int]] = set()
 
+    def has_arrived():
+        return stop_when_already_visited and (x, y) in visited
+
+    def blocks_to_rabbit_hq():
+        return abs(x) + abs(y)
+
     for turn, distance in instructions:
         if turn == 'L':
             angle = (angle - 90) % 360
@@ -20,29 +26,29 @@ def measure_distance(instructions, stop_when_already_visited):
         if angle == 0:
             for _ in range(1, distance + 1):
                 y += 1
-                if stop_when_already_visited and (x, y) in visited:
-                    return abs(x) + abs(y)
+                if has_arrived():
+                    return blocks_to_rabbit_hq()
                 visited.add((x, y))
         elif angle == 90:
             for _ in range(1, distance + 1):
                 x += 1
-                if stop_when_already_visited and (x, y) in visited:
-                    return abs(x) + abs(y)
+                if has_arrived():
+                    return blocks_to_rabbit_hq()
                 visited.add((x, y))
         elif angle == 180:
             for _ in range(1, distance + 1):
                 y -= 1
-                if stop_when_already_visited and (x, y) in visited:
-                    return abs(x) + abs(y)
+                if has_arrived():
+                    return blocks_to_rabbit_hq()
                 visited.add((x, y))
         elif angle == 270:
             for _ in range(1, distance + 1):
                 x -= 1
-                if stop_when_already_visited and (x, y) in visited:
-                    return abs(x) + abs(y)
+                if has_arrived():
+                    return blocks_to_rabbit_hq()
                 visited.add((x, y))
 
-    return abs(x) + abs(y)
+    return blocks_to_rabbit_hq()
 
 if __name__ == '__main__':
     instructions = read_instructions('input.txt')
