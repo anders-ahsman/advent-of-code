@@ -1,6 +1,3 @@
-with open('input.txt', 'r') as f:
-    instructions = [line.rstrip() for line in f.readlines()]
-
 keypad_simple = [
     ['1', '2', '3'],
     ['4', '5', '6'],
@@ -11,6 +8,11 @@ keypad_star = [
     ['5', '6', '7', '8', '9'],
     [ '', 'A', 'B', 'C',  ''],
     [ '',  '', 'D',  '',  '']]
+
+def read_instructions(filename):
+    with open(filename, 'r') as f:
+        instructions = [line.rstrip() for line in f.readlines()]
+    return instructions
 
 def crack_code(keypad, inst, x, y):
     code = ''
@@ -29,5 +31,7 @@ def crack_code(keypad, inst, x, y):
         code += keypad[y][x]
     return code
 
-print(f'Part 1: {crack_code(keypad_simple, instructions, 1, 1)}')
-print(f'Part 2: {crack_code(keypad_star, instructions, 0, 2)}')
+if __name__ == '__main__':
+    instructions = read_instructions('input.txt')
+    print(f'Part 1: {crack_code(keypad_simple, instructions, 1, 1)}')
+    print(f'Part 2: {crack_code(keypad_star, instructions, 0, 2)}')
