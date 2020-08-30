@@ -14,11 +14,11 @@ def read_instructions(filename):
         instructions = [line.rstrip() for line in f.readlines()]
     return instructions
 
-def crack_code(keypad, inst, x, y):
+def crack_code(keypad, instructions, x, y):
     code = ''
     x_max = len(keypad[0]) - 1
     y_max = len(keypad) - 1
-    for instruction in inst:
+    for instruction in instructions:
         for letter in instruction:
             if letter == 'U' and y > 0 and keypad[y - 1][x]:
                 y -= 1

@@ -23,7 +23,7 @@ def calculate_checksum(room: str) -> str:
     # Sort by letter count first and then by alphabetical order of the letters.
     # Start with rightmost criteria.
     sorted_alphabetically = sorted(letter_to_count)
-    checksum = sorted(sorted_alphabetically, key=lambda k: letter_to_count[k], reverse=True)
+    checksum = sorted(sorted_alphabetically, key=lambda letter: letter_to_count[letter], reverse=True)
     return ''.join(checksum[:5])
 
 def read_checksum(room: str) -> str:
