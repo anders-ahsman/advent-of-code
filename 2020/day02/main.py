@@ -29,8 +29,8 @@ def password2(lines):
         max_pos = int(m.group(2)) - 1
         letter = m.group(3)
         password = m.group(4)
-        if (password[min_pos] == letter or password[max_pos] == letter) and not \
-                (password[min_pos] == letter and password[max_pos] == letter):
+        if (password[min_pos] == letter and password[max_pos] != letter) or \
+                (password[min_pos] != letter and password[max_pos] == letter):
             valid_count += 1
     return valid_count
 
