@@ -1,5 +1,8 @@
+import re
 import sys
 
+
+pattern = r'^(\d+)-(\d+) (\w): (\w+)$'
 
 def read_lines():
     return [line.strip() for line in sys.stdin]
@@ -8,11 +11,11 @@ def read_lines():
 def password1(lines):
     valid_count = 0
     for line in lines:
-        lengths, letter, password = line.split(' ')
-        min_len, max_len = lengths.split('-')
-        min_len = int(min_len)
-        max_len = int(max_len)
-        letter = letter[:-1]
+        m = re.match(pattern, line)
+        min_len = int(m.group(1))
+        max_len = int(m.group(2))
+        letter = m.group(3)
+        password = m.group(4)
         if min_len <= password.count(letter) <= max_len:
             valid_count += 1
     return valid_count
@@ -21,11 +24,11 @@ def password1(lines):
 def password2(lines):
     valid_count = 0
     for line in lines:
-        lengths, letter, password = line.split(' ')
-        min_pos, max_pos = lengths.split('-')
-        min_pos = int(min_pos) - 1
-        max_pos = int(max_pos) - 1
-        letter = letter[:-1]
+        m = re.match(pattern, line)
+        min_pos = int(m.group(1)) - 1
+        max_pos = int(m.group(2)) - 1
+        letter = m.group(3)
+        password = m.group(4)
         if (password[min_pos] == letter or password[max_pos] == letter) and not \
                 (password[min_pos] == letter and password[max_pos] == letter):
             valid_count += 1
