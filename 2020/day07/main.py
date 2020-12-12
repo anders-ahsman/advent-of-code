@@ -1,33 +1,34 @@
 import sys
 
+
 def read_lines():
+    return [line.rstrip() for line in sys.stdin]
+
+
+def create_graph(lines):
     graph = {}
-    for line in sys.stdin:
-        bag_type, contain = line.split('contain')
-        bag_type = bag_type.replace(' bags', '').strip()
-        contain = contain.strip()
-        contain = contain.replace('.','').replace('bags', '').replace('bag', '')
+    for line in lines:
+        bag_type, contain = line.rstrip().split(' bags contain ')
         if 'no other' in contain:
             contain = []
-        elif ', ' in contain:
-            contain = [part.rstrip() for part in contain.split(', ')]
         else:
-            contain = [contain.rstrip()]
+            contain = [part for part in contain.split(', ')]
         graph[bag_type] = contain
     return graph
 
 
-def part1(graph, target, count=0, known_targets=set()):
-    if target in known_targets:
+def part1(graph, target, count=0, seen=set()):
+    if target in seen:
         return count - 1
-    known_targets.add(target)
-    for bag, contains in graph.items():
-        if any(target in part for part in contains):
+    seen.add(target)
+    for bag, contain in graph.items():
+        if any(target in part for part in contain):
             count = part1(graph, bag, count + 1)
     return count
 
 
 if __name__ == '__main__':
-    graph = read_lines()
+    lines = read_lines()
+    graph = create_graph(lines)
     target = 'shiny gold'
     print(f'Part 1: {part1(graph, target)}')
