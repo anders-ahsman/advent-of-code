@@ -19,10 +19,8 @@ def part1(lines):
             address = int(m[1])
             value = int(m[2])
             value_bin = list(f'{value:036b}')
-            result = mem[address]
             for i, bit in enumerate(mask):
-                result[i] = bit if bit in ['0', '1'] else value_bin[i]
-            mem[address] = result
+                mem[address][i] = bit if bit in ['0', '1'] else value_bin[i]
     s = sum(int(''.join(address), 2) for address in mem)
     return s
 
