@@ -10,17 +10,17 @@ def read_input():
 
 def part1(lines):
     mem = defaultdict(lambda: ['0'] * 36)
-    mask = ['0' * 36]
+    mask = '0' * 36
     for line in lines:
         if 'mask' in line:
             mask = line.split('mask = ')[1]
         else:
             m = re.match(r'^mem\[(\d+)\] = (\d+)$', line)
-            address = int(m[1])
+            addr = int(m[1])
             value = int(m[2])
             value_bin = list(f'{value:036b}')
             for i, bit in enumerate(mask):
-                mem[address][i] = bit if bit in ['0', '1'] else value_bin[i]
+                mem[addr][i] = bit if bit in ['0', '1'] else value_bin[i]
     s = sum(int(''.join(mem[addr]), 2) for addr in mem)
     return s
 
