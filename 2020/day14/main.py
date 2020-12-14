@@ -1,3 +1,4 @@
+from collections import defaultdict
 import re
 import sys
 
@@ -7,9 +8,7 @@ def read_input():
 
 
 def part1(lines):
-    mem = []
-    for _ in range(99999):
-        mem.append(['0'] * 36)
+    mem = defaultdict(lambda: ['0'] * 36)
     mask = ['0' * 36]
     for line in lines:
         if 'mask' in line:
@@ -21,7 +20,7 @@ def part1(lines):
             value_bin = list(f'{value:036b}')
             for i, bit in enumerate(mask):
                 mem[address][i] = bit if bit in ['0', '1'] else value_bin[i]
-    s = sum(int(''.join(address), 2) for address in mem)
+    s = sum(int(''.join(mem[addr]), 2) for addr in mem)
     return s
 
 
