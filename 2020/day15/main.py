@@ -2,8 +2,7 @@ def part1(numbers):
     def rindex(l, val):
         return len(l) - l[::-1].index(val) - 1
 
-    t = len(numbers)
-    while t < 2020:
+    for _ in range(len(numbers), 2020):
         last_number = numbers[-1]
         if numbers.count(last_number) > 1:
             idx_r = rindex(numbers, last_number)
@@ -12,7 +11,6 @@ def part1(numbers):
         else:
             next_number = 0
         numbers.append(next_number)
-        t += 1
     return numbers[-1]
 
 
