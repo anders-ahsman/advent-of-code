@@ -1,6 +1,5 @@
 import re
 import sys
-import operator
 
 
 def read_expressions():
@@ -13,10 +12,6 @@ def part1(expressions):
 
 def solve(expr):
     expr = expr.replace(' ', '')
-    ops = {
-        '+': operator.add,
-        '*': operator.mul,
-    }
 
     while '(' in expr:
         start = expr.rindex('(') + 1
@@ -24,11 +19,10 @@ def solve(expr):
         res = solve(expr[start:end]) # sub-expression contains no parenthesis
         expr = f'{expr[:start - 1]}{res}{expr[end + 1:]}' # replace sub-expression with result
 
-    while any(op in expr for op in ops):
-        m = re.match(r'^(\d+)([\+\*])(\d+)(.*)', expr)
-        op, left, right, expr_rest = ops[m[2]], int(m[1]), int(m[3]), m[4]
-        res = op(left, right)
-        expr = f'{res}{expr_rest}'
+    while '+' in expr or '*' in expr:
+        # since start of string is matched order will be left to right
+        expr = re.sub(r'^(\d+)\+(\d+)', lambda m: str(int(m[1]) + int(m[2])), expr)
+        expr = re.sub(r'^(\d+)\*(\d+)', lambda m: str(int(m[1]) * int(m[2])), expr)
 
     return int(expr)
 
