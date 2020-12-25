@@ -50,10 +50,9 @@ def part2(black_tiles):
         new_black = black_tiles.copy()
         for tile in black_tiles:
             # check black tile and its neighbours
-            positions = [(0, 0, 0), (0, 1, -1), (-1, 0, 1), (1, 0, -1), (0, -1, 1), (-1, 1, 0), (1, -1, 0)]
-            for (dx, dy, dz) in positions:
-                (x, y, z) = tile
-                pos = (x + dx, y + dy, z + dz)
+            pos_deltas = [(0, 0, 0), (0, 1, -1), (-1, 0, 1), (1, 0, -1), (0, -1, 1), (-1, 1, 0), (1, -1, 0)]
+            for pos_delta in pos_deltas:
+                pos = tuple(map(sum, zip(tile, pos_delta)))
                 count = black_neighbour_count(pos, black_tiles)
                 if pos in black_tiles and (count == 0 or count > 2) and pos in new_black:
                     new_black.remove(pos)
@@ -66,9 +65,8 @@ def part2(black_tiles):
 def black_neighbour_count(tile, black_tiles):
     count = 0
     neighbours = [(0, 1, -1), (-1, 0, 1), (1, 0, -1), (0, -1, 1), (-1, 1, 0), (1, -1, 0)]
-    for (dx, dy, dz) in neighbours:
-        (x, y, z) = tile
-        pos = (x + dx, y + dy, z + dz)
+    for pos_delta in neighbours:
+        pos = tuple(map(sum, zip(tile, pos_delta)))
         if pos in black_tiles:
             count += 1
     return count
