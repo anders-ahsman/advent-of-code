@@ -1,38 +1,30 @@
 def part1(cups):
     cups = [int(x) for x in cups]
-    idx = 0
-    for _ in range(100):
-        # use "double" list to simulate circle
-        picked_up = (cups + cups)[idx + 1:idx + 4]
+    moves = 100
+    successors = solve(cups, moves)
 
-        value = cups[idx]
-        dest_value = value - 1
-        if dest_value == 0:
-            dest_value = max(cups)
-        while dest_value in picked_up:
-            dest_value -= 1
-            if dest_value == 0:
-                dest_value = max(cups)
-        dest_idx = cups.index(dest_value)
-
-        cups = [c for c in cups[:dest_idx + 1] if c not in picked_up] + \
-               picked_up + \
-               [c for c in cups[dest_idx + 1:] if c not in picked_up]
-
-        idx = (cups.index(value) + 1) % len(cups)
-
-    return ''.join([str((cups + cups)[i])
-                    for i in range(cups.index(1) + 1, cups.index(1) + 9)])
+    res = ''
+    cup = successors[1]
+    while cup != 1:
+        res += str(cup)
+        cup = successors[cup]
+    return res
 
 
 def part2(cups):
     cups = [int(x) for x in cups] + list(range(10, 1_000_001))
+    moves = 10_000_000
+    successors = solve(cups, moves)
+    return successors[1] * successors[successors[1]]
+
+
+def solve(cups, moves):
     successors = {}
     for c1, c2 in zip(cups, cups[1:] + cups[:1]):
         successors[c1] = c2
 
     curr = cups[0]
-    for _ in range(10_000_000):
+    for _ in range(moves):
         a = successors[curr]
         b = successors[a]
         c = successors[b]
@@ -47,8 +39,7 @@ def part2(cups):
 
         successors[curr], successors[dest], successors[c] = successors[c], a, successors[dest]
         curr = successors[curr]
-
-    return successors[1] * successors[successors[1]]
+    return successors
 
 if __name__ == '__main__':
     cups = '326519478'
