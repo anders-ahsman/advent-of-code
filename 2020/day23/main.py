@@ -32,13 +32,13 @@ class Node:
 
 
 def part2(cups):
-    cups = [int(x) for x in cups] + list(range(10, 1000001))
+    cups = [int(x) for x in cups] + list(range(10, 1_000_001))
     nodes = {c : Node(int(c)) for c in cups}
     for c1, c2 in zip(cups, cups[1:] + cups[:1]):
         nodes[c1].next = nodes[c2]
 
     current = nodes[cups[0]]
-    for _ in range(10000000):
+    for _ in range(10_000_000):
         a = current.next
         b = a.next
         c = b.next
