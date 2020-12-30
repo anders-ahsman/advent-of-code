@@ -29,13 +29,13 @@ def solve(cups, moves):
         b = successors[a]
         c = successors[b]
 
-        dest = curr - 1
-        if dest == 0:
-            dest = max(cups)
-        while dest in (a, b, c):
+        dest = curr
+        while True:
             dest -= 1
             if dest == 0:
                 dest = max(cups)
+            if dest not in (a, b, c):
+                break
 
         successors[curr], successors[dest], successors[c] = successors[c], a, successors[dest]
         curr = successors[curr]
