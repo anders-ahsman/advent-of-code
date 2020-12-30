@@ -25,41 +25,30 @@ def part1(cups):
                     for i in range(cups.index(1) + 1, cups.index(1) + 9)])
 
 
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.next = None
-
-
 def part2(cups):
     cups = [int(x) for x in cups] + list(range(10, 1_000_001))
-    nodes = {c : Node(int(c)) for c in cups}
+    successors = {}
     for c1, c2 in zip(cups, cups[1:] + cups[:1]):
-        nodes[c1].next = nodes[c2]
+        successors[c1] = c2
 
-    current = nodes[cups[0]]
+    curr = cups[0]
     for _ in range(10_000_000):
-        a = current.next
-        b = a.next
-        c = b.next
-        current.next, c.next = c.next, None
+        a = successors[curr]
+        b = successors[a]
+        c = successors[b]
 
-        value = current.value
-        dest_value = value - 1
-        if dest_value == 0:
-            dest_value = max(cups)
-        while dest_value in (a.value, b.value, c.value):
-            dest_value -= 1
-            if dest_value == 0:
-                dest_value = max(cups)
+        dest = curr - 1
+        if dest == 0:
+            dest = max(cups)
+        while dest in (a, b, c):
+            dest -= 1
+            if dest == 0:
+                dest = max(cups)
 
-        dest_node = nodes[dest_value]
-        dest_node.next, c.next = a, dest_node.next
+        successors[curr], successors[dest], successors[c] = successors[c], a, successors[dest]
+        curr = successors[curr]
 
-        current = nodes[current.value].next
-
-    return nodes[1].next.value * nodes[1].next.next.value
-
+    return successors[1] * successors[successors[1]]
 
 if __name__ == '__main__':
     cups = '326519478'
