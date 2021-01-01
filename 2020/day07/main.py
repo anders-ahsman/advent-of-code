@@ -1,3 +1,4 @@
+import re
 import sys
 
 
@@ -8,11 +9,13 @@ def read_lines():
 def create_graph(lines):
     bag_to_contents = {}
     for line in lines:
-        bag, inside = line.rstrip().split(' bags contain ')
         contents = {}
+        m = re.match(r'^(\w+ \w+) bags contain (.*)', line)
+        bag, inside = m[1], m[2]
         if 'no other' not in inside:
             for part in inside.split(', '):
-                count, color = int(part[0:1]), part[2:]
+                m = re.match(r'(\d) (\w+ \w+) bag', part)
+                count, color = int(m[1]), m[2]
                 contents[color] = count
         bag_to_contents[bag] = contents
     return bag_to_contents
