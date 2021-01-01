@@ -21,18 +21,28 @@ def create_graph(lines):
     return bag_to_contents
 
 
-def part1(bag_to_contents, target, count=0, seen=set()):
-    if target in seen:
+def part1(bag_to_contents, target_bag, count=0, seen=set()):
+    if target_bag in seen:
         return count - 1
-    seen.add(target)
+    seen.add(target_bag)
     for bag in bag_to_contents:
-        if any(target in part for part in bag_to_contents[bag]):
+        if any(target_bag in contents for contents in bag_to_contents[bag]):
             count = part1(bag_to_contents, bag, count + 1)
     return count
+
+
+def part2(bag_to_contents, target_bag):
+    contents = bag_to_contents[target_bag]
+    if len(contents) == 0:
+        return 0
+
+    return sum(count * (1 + part2(bag_to_contents, bag)) \
+               for bag, count in contents.items())
 
 
 if __name__ == '__main__':
     lines = read_lines()
     bag_to_contents = create_graph(lines)
-    target = 'shiny gold'
-    print(f'Part 1: {part1(bag_to_contents, target)}')
+    target_bag = 'shiny gold'
+    print(f'Part 1: {part1(bag_to_contents, target_bag)}')
+    print(f'Part 2: {part2(bag_to_contents, target_bag)}')
