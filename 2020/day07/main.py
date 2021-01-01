@@ -21,14 +21,16 @@ def create_graph(lines):
     return bag_to_contents
 
 
-def part1(bag_to_contents, target_bag, count=0, seen=set()):
-    if target_bag in seen:
-        return count - 1
-    seen.add(target_bag)
-    for bag in bag_to_contents:
-        if any(target_bag in contents for contents in bag_to_contents[bag]):
-            count = part1(bag_to_contents, bag, count + 1)
-    return count
+def part1(bag_to_contents, target_bag):
+    holds_target_bag = set()
+    def check(target_bag):
+        for bag in bag_to_contents:
+            if target_bag in bag_to_contents[bag]:
+                holds_target_bag.add(bag)
+                check(bag)
+
+    check(target_bag)
+    return len(holds_target_bag)
 
 
 def part2(bag_to_contents, target_bag):
