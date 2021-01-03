@@ -29,4 +29,9 @@ def matches_rules(message, sub_rules):
 
 if __name__ == '__main__':
     rules, messages = read_input()
+
     print(f'Part 1: {sum(matches_rules(m, ["0"]) for m in messages)}')
+
+    rules['8'] = [['42'], ['42', '8']]
+    rules['11'] = [['42', '31'], ['42', '11', '31']]
+    print(f'Part 2: {sum(matches_rules(m, ["0"]) for m in messages)}')
