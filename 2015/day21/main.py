@@ -11,6 +11,7 @@ class Item(NamedTuple):
     damage: int
     armor: int
 
+
 @dataclass
 class Character:
     hitpoints: int
@@ -70,10 +71,14 @@ for line in sys.stdin:
 players: List[Character] = []
 for w in weapons:
     for a in list(combinations(armor, 0)) + list(combinations(armor, 1)):
-        for r in list(combinations(rings, 0)) + list(combinations(rings, 1)) + list(combinations(rings, 2)):
+        for r in list(combinations(rings, 0)) + \
+                 list(combinations(rings, 1)) + \
+                 list(combinations(rings, 2)):
             items: List[Item] = [w]
-            for x in a: items.append(x)
-            for x in r: items.append(x)
+            for x in a:
+                items.append(x)
+            for x in r:
+                items.append(x)
             player = Character(100)
             player.items = items
             players.append(player)
