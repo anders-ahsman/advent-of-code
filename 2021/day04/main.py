@@ -7,10 +7,9 @@ Board = List[List[int]]
 
 
 class BingoBoard:
-    BOARD_SIZE = 5
-
     def __init__(self, board: Board) -> None:
         self.board = board
+        self.BOARD_SIZE = len(board)  # assume square board
         self.is_marked = [[False] * self.BOARD_SIZE for _ in range(self.BOARD_SIZE)]
 
     def mark_position(self, row: int, col: int) -> None:
