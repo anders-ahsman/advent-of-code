@@ -3,7 +3,7 @@ import sys
 
 
 def read_foods():
-    return [l.rstrip() for l in sys.stdin.readlines()]
+    return [line.rstrip() for line in sys.stdin.readlines()]
 
 
 def solve(foods, is_part1):

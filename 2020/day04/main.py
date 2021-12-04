@@ -3,6 +3,7 @@ import sys
 
 required_fields = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
 
+
 def read_passports():
     passports = []
     lines = [line.strip() for line in sys.stdin]

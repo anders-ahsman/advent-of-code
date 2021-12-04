@@ -23,6 +23,7 @@ def create_graph(lines):
 
 def part1(bag_to_contents, target_bag):
     holds_target_bag = set()
+
     def check(target_bag):
         for bag in bag_to_contents:
             if target_bag in bag_to_contents[bag]:
@@ -38,7 +39,7 @@ def part2(bag_to_contents, target_bag):
     if len(contents) == 0:
         return 0
 
-    return sum(count * (1 + part2(bag_to_contents, bag)) \
+    return sum(count * (1 + part2(bag_to_contents, bag))
                for bag, count in contents.items())
 
 

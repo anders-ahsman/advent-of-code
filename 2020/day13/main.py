@@ -22,6 +22,7 @@ def part1(depature_earliest, buses):
             departure_best_bus = bus
     return (departure_best_time - depature_earliest) * departure_best_bus
 
+
 def part2(buses):
     def departs_at(t, bus):
         return t % bus == 0

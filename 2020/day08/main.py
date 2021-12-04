@@ -1,5 +1,6 @@
 import sys
 
+
 def read_program():
     return [line.strip() for line in sys.stdin]
 

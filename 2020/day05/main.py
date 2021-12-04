@@ -1,6 +1,7 @@
 from collections import defaultdict
 import sys
 
+
 def read_boarding_passes():
     return [line.strip() for line in sys.stdin]
 

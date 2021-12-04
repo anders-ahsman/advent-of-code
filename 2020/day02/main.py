@@ -4,6 +4,7 @@ import sys
 
 pattern = r'^(\d+)-(\d+) (\w): (\w+)$'
 
+
 def read_lines():
     return [line.strip() for line in sys.stdin]
 

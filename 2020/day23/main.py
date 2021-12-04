@@ -41,6 +41,7 @@ def solve(cups, moves):
         curr = successors[curr]
     return successors
 
+
 if __name__ == '__main__':
     cups = '326519478'
     print(f'Part 1: {part1(cups)}')

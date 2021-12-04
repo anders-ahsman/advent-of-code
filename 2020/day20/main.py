@@ -7,7 +7,7 @@ import numpy as np
 
 def read_tiles():
     tiles = {}
-    for tile_lines in [l.split('\n') for l in sys.stdin.read().split('\n\n')]:
+    for tile_lines in [line.split('\n') for line in sys.stdin.read().split('\n\n')]:
         key = int(tile_lines[0].replace(':', '').replace('Tile ', ''))
         tiles[key] = np.array([list(line) for line in tile_lines[1:]])
     return tiles
@@ -58,10 +58,14 @@ def solve(tiles, is_part1):
                 is_neighbour, direction = possible_neighbours(a1, a2_comb)
                 if is_neighbour:
                     pos_x, pos_y = tile_to_pos[t]
-                    if direction == 'U': pos_y -= 10
-                    elif direction == 'D': pos_y += 10
-                    elif direction == 'L': pos_x -= 10
-                    elif direction == 'R': pos_x += 10
+                    if direction == 'U':
+                        pos_y -= 10
+                    elif direction == 'D':
+                        pos_y += 10
+                    elif direction == 'L':
+                        pos_x -= 10
+                    elif direction == 'R':
+                        pos_x += 10
                     tile_to_pos[t2] = pos_x, pos_y
 
                     tiles_adjusted[t2] = a2_comb
@@ -100,10 +104,10 @@ def solve(tiles, is_part1):
                   zip(*np.asarray(np.unique(board, return_counts=True)))}
     for board_comb in array_combinations(board):
         monster_count = sum(1 for c in range(col_count)
-                              for r in range(row_count)
-                              if is_sea_monster(board_comb, r, c))
+                            for r in range(row_count)
+                            if is_sea_monster(board_comb, r, c))
         if monster_count > 0:
-            water_roughness = char_count['#'] - monster_count * sum(l.count('#') for l in sea_monster)
+            water_roughness = char_count['#'] - monster_count * sum(line.count('#') for line in sea_monster)
             return water_roughness
 
 

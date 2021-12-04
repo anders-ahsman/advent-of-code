@@ -1,6 +1,7 @@
 import string
 import sys
 
+
 def read_lines():
     return [line.strip() for line in sys.stdin]
 

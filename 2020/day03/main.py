@@ -1,5 +1,6 @@
 import sys
 
+
 def read_tree_map():
     return [line.strip() * 100 for line in sys.stdin]
 
@@ -22,4 +23,10 @@ def move(tree_map, delta_x, delta_y):
 if __name__ == '__main__':
     tree_map = read_tree_map()
     print(f'Part 1: {move(tree_map, 3, 1)}')
-    print(f'Part 2: {move(tree_map, 1, 1) * move(tree_map, 3, 1) * move(tree_map, 5, 1) * move(tree_map, 7, 1) * move(tree_map, 1, 2)}')
+
+    part2 = move(tree_map, 1, 1) * \
+        move(tree_map, 3, 1) * \
+        move(tree_map, 5, 1) * \
+        move(tree_map, 7, 1) * \
+        move(tree_map, 1, 2)
+    print(f'Part 2: {part2}')

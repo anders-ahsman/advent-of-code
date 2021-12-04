@@ -24,7 +24,7 @@ def matches_rules(message, sub_rules):
         else:
             return False
     else:
-        return any(matches_rules(message, t + sub_rules[1:]) for t in rule) # expand first term
+        return any(matches_rules(message, t + sub_rules[1:]) for t in rule)  # expand first term
 
 
 if __name__ == '__main__':
