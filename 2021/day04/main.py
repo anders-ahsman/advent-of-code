@@ -38,7 +38,7 @@ class BingoBoard:
                    if not self.is_marked[row][col])
 
 
-def read_numbers_and_boards() -> Tuple[List[int], List[BingoBoard]]:
+def read_numbers_and_bingo_boards() -> Tuple[List[int], List[BingoBoard]]:
     lines = [line.strip() for line in sys.stdin]
 
     numbers = [int(num) for num in lines[0].split(',')]
@@ -68,6 +68,22 @@ def part1(numbers: List[int], bingo_boards: List[BingoBoard]) -> int:
     raise ValueError('No board had bingo!')
 
 
+def part2(numbers: List[int], bingo_boards: List[BingoBoard]) -> int:
+    last_score = 0
+    for number in numbers:
+        for bingo_board in bingo_boards:
+            if bingo_board.has_bingo:
+                continue
+            for row_idx, row in enumerate(bingo_board.board):
+                for col_idx, board_number in enumerate(row):
+                    if board_number == number:
+                        bingo_board.mark_position(row_idx, col_idx)
+                        if bingo_board.has_bingo:
+                            last_score = number * bingo_board.unmarked_sum
+    return last_score
+
+
 if __name__ == '__main__':
-    numbers, bingo_boards = read_numbers_and_boards()
+    numbers, bingo_boards = read_numbers_and_bingo_boards()
     print(f'Part 1: {part1(numbers, bingo_boards)}')
+    print(f'Part 2: {part2(numbers, bingo_boards)}')
