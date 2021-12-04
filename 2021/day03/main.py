@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from typing import List
+from typing import Callable, List
 
 
 def read_input() -> List[str]:
@@ -12,9 +12,9 @@ def part1(numbers: List[str]) -> int:
     gamma = ''
     epsilon = ''
 
-    for i in range(len(numbers[0])):
-        ones = ones_count(numbers, i)
-        zeros = zeros_count(numbers, i)
+    for idx in range(len(numbers[0])):
+        ones = ones_count(numbers, idx)
+        zeros = zeros_count(numbers, idx)
         gamma += '1' if ones > zeros else '0'
         epsilon += '0' if ones > zeros else '1'
 
@@ -22,26 +22,23 @@ def part1(numbers: List[str]) -> int:
 
 
 def part2(numbers: List[str]) -> int:
-    def get_oxygen_rating(numbers: List[str]) -> int:
-        for i in range(len(numbers[0])):
-            more_ones = ones_count(numbers, i) >= zeros_count(numbers, i)
-            numbers = numbers_with_one_at_idx(numbers, i) if more_ones else numbers_with_zero_at_idx(numbers, i)
-
+    def get_rating(numbers: List[str], bit_criteria: Callable[[List[str], int], List[str]]) -> int:
+        for idx in range(len(numbers[0])):
+            numbers = bit_criteria(numbers, idx)
             if len(numbers) == 1:
                 return int(numbers[0], 2)
         raise ValueError()
 
-    def get_scrubber_rating(numbers: List[str]) -> int:
-        for i in range(len(numbers[0])):
-            more_zeros = ones_count(numbers, i) < zeros_count(numbers, i)
-            numbers = numbers_with_one_at_idx(numbers, i) if more_zeros else numbers_with_zero_at_idx(numbers, i)
+    def criteria_oxygen_rating(numbers: List[str], idx: int) -> List[str]:
+        more_ones = ones_count(numbers, idx) >= zeros_count(numbers, idx)
+        return numbers_with_one_at_idx(numbers, idx) if more_ones else numbers_with_zero_at_idx(numbers, idx)
 
-            if len(numbers) == 1:
-                return int(numbers[0], 2)
-        raise ValueError()
+    def criteria_scrubber_rating(numbers: List[str], idx: int) -> List[str]:
+        more_zeros = ones_count(numbers, idx) < zeros_count(numbers, idx)
+        return numbers_with_one_at_idx(numbers, idx) if more_zeros else numbers_with_zero_at_idx(numbers, idx)
 
-    oxygen_rating = get_oxygen_rating(numbers)
-    scrubber_rating = get_scrubber_rating(numbers)
+    oxygen_rating = get_rating(numbers, criteria_oxygen_rating)
+    scrubber_rating = get_rating(numbers, criteria_scrubber_rating)
     return oxygen_rating * scrubber_rating
 
 
