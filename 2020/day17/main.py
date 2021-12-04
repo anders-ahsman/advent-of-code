@@ -6,29 +6,28 @@ def read_lines():
 
 
 def read_initial_state(lines):
-    state = {}
+    state = set()
     z = 0
     for y, line in enumerate(lines):
-        for x, ch in enumerate(line):
-            state[(x, y, z)] = ch
+        for x in range(len(line)):
+            state.add((x, y, z))
     return state
 
 
-def part1(state):
-    for _ in range(6):
-        newstate = dict(state)
-        for pos in state:
-            x, y, z = pos
+def part1(state, cycles=6):
+    for _ in range(cycles):
+        newstate = state.copy()
+        for (x, y, z) in state:
             for dz in (-1, 0, 1):
                 for dy in (-1, 0, 1):
                     for dx in (-1, 0, 1):
-                        newpos = (x + dx, y + dy, z + dz)
-                        if newpos in state and state[newpos] == '#':
-                            newstate[newpos] = '#' if 2 <= neighbours(state, newpos) <= 3 else '.'
-                        elif newpos in state and state[newpos] == '.' or newpos not in state:
-                            newstate[newpos] = '#' if neighbours(state, newpos) == 3 else '.'
+                        pos = (x + dx, y + dy, z + dz)
+                        neighbour_count = neighbours(state, pos)
+                        if (pos in state and 2 <= neighbour_count <= 3) or \
+                           (pos not in state and neighbour_count == 3):
+                                newstate.add(pos)
         state = newstate
-    return list(state.values()).count('#')
+    return len(state)
 
 
 def neighbours(state, pos):
@@ -39,38 +38,38 @@ def neighbours(state, pos):
             for dx in (-1, 0, 1):
                 if dz == dy == dx == 0:
                     continue
-                npos = (x + dx, y + dy, z + dz)
-                if npos in state and state[npos] == '#':
+                pos = (x + dx, y + dy, z + dz)
+                if pos in state:
                     count += 1
     return count
 
 
 def read_initial_state2(lines):
-    state = {}
+    state = set()
     w = 0
     z = 0
     for y, line in enumerate(lines):
-        for x, ch in enumerate(line):
-            state[(x, y, z, w)] = ch
+        for x in range(len(line)):
+            state.add((x, y, z, w))
     return state
 
 
-def part2(state):
-    for _ in range(6):
-        newstate = dict(state)
-        for pos in state:
-            x, y, z, w = pos
+def part2(state, cycles=6):
+    for _ in range(cycles):
+        print(_)
+        newstate = state.copy()
+        for (x, y, z, w) in state:
             for dw in (-1, 0, 1):
                 for dz in (-1, 0, 1):
                     for dy in (-1, 0, 1):
                         for dx in (-1, 0, 1):
-                            newpos = (x + dx, y + dy, z + dz, w + dw)
-                            if newpos in state and state[newpos] == '#':
-                                newstate[newpos] = '#' if 2 <= neighbours2(state, newpos) <= 3 else '.'
-                            elif newpos in state and state[newpos] == '.' or newpos not in state:
-                                newstate[newpos] = '#' if neighbours2(state, newpos) == 3 else '.'
+                            pos = (x + dx, y + dy, z + dz, w + dw)
+                            neighbour_count = neighbours2(state, pos)
+                            if (pos in state and 2 <= neighbour_count <= 3) or \
+                               (pos not in state and neighbour_count == 3):
+                                    newstate.add(pos)
         state = newstate
-    return list(state.values()).count('#')
+    return len(state)
 
 
 def neighbours2(state, pos):
@@ -82,8 +81,8 @@ def neighbours2(state, pos):
                 for dx in (-1, 0, 1):
                     if dz == dy == dx == dw == 0:
                         continue
-                    npos = (x + dx, y + dy, z + dz, w + dw)
-                    if npos in state and state[npos] == '#':
+                    pos = (x + dx, y + dy, z + dz, w + dw)
+                    if pos in state:
                         count += 1
     return count
 
