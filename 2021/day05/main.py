@@ -16,10 +16,10 @@ def part1(lines: List[str]) -> int:
         from_x, from_y = [int(pos) for pos in pos_from.split(',')]
         to_x, to_y = [int(pos) for pos in pos_to.split(',')]
         if from_x == to_x:
-            for y in range(from_y, to_y + 1) if from_y <= to_y else range(to_y, from_y + 1):
+            for y in range(min(from_y, to_y), max(from_y, to_y) + 1):
                 board[(from_x, y)] += 1
         if from_y == to_y:
-            for x in range(from_x, to_x + 1) if from_x <= to_x else range(to_x, from_x + 1):
+            for x in range(min(from_x, to_x), max(from_x, to_x) + 1):
                 board[(x, from_y)] += 1
     return sum(1 for overlap in board.values() if overlap >= 2)
 
