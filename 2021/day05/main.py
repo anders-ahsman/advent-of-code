@@ -2,7 +2,7 @@
 
 import sys
 from collections import defaultdict
-from typing import List
+from typing import DefaultDict, List, Tuple
 
 
 def read_input() -> List[str]:
@@ -10,7 +10,8 @@ def read_input() -> List[str]:
 
 
 def part1(lines: List[str]) -> int:
-    board = defaultdict(int)
+    board: DefaultDict[Tuple[int, int], int] = defaultdict(int)
+
     for line in lines:
         pos_from, pos_to = line.split(' -> ')
         from_x, from_y = [int(pos) for pos in pos_from.split(',')]
