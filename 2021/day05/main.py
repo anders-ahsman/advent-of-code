@@ -23,9 +23,11 @@ def part1_and_2(lines: List[str], include_diagonal_lines: bool) -> int:
             for x in range(min(from_x, to_x), max(from_x, to_x) + 1):
                 board[(x, from_y)] += 1
         elif include_diagonal_lines:  # assume diagonal 45 degrees
+            dx = 1 if to_x > from_x else -1
+            dy = 1 if to_y > from_y else -1
             for step in range(max(from_y, to_y) - min(from_y, to_y) + 1):
-                pos_x = from_x + step * (1 if to_x > from_x else -1)
-                pos_y = from_y + step * (1 if to_y > from_y else -1)
+                pos_x = from_x + step * dx
+                pos_y = from_y + step * dy
                 board[(pos_x, pos_y)] += 1
     return sum(1 for overlap in board.values() if overlap >= 2)
 
