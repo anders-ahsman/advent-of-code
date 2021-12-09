@@ -13,15 +13,11 @@ def part1(board: List[List[int]]) -> int:
     sum_risk_lowpoints = 0
     for y, row in enumerate(board):
         for x, num in enumerate(row):
-            is_lowpoint = True
-            if x - 1 >= 0 and num > board[y][x - 1]:
-                is_lowpoint = False
-            if x + 1 < len(board[y]) and num >= board[y][x + 1]:
-                is_lowpoint = False
-            if y - 1 >= 0 and num > board[y - 1][x]:
-                is_lowpoint = False
-            if y + 1 < len(board) and num >= board[y + 1][x]:
-                is_lowpoint = False
+            is_lowpoint = not(
+                (y - 1 >= 0 and num > board[y - 1][x]) or
+                (y + 1 < len(board) and num >= board[y + 1][x]) or
+                (x - 1 >= 0 and num > board[y][x - 1]) or
+                (x + 1 < len(board[y]) and num >= board[y][x + 1]))
             if is_lowpoint:
                 sum_risk_lowpoints += num + 1
     return sum_risk_lowpoints
