@@ -9,13 +9,16 @@ def read_input() -> List[str]:
     return [line.strip() for line in sys.stdin]
 
 
-def part1(lines: List[str]) -> int:
+def parse_connections(lines: List[str]) -> DefaultDict[str, Set[str]]:
     connections: DefaultDict[str, Set[str]] = defaultdict(set)
     for line in lines:
         start, end = line.split('-')
         connections[start].add(end)
         connections[end].add(start)
+    return connections
 
+
+def part1(connections: DefaultDict[str, Set[str]]) -> int:
     path_count = 0
 
     def visit_node(node: str, path: List[str], explored: Set[str]) -> None:
@@ -36,5 +39,6 @@ def part1(lines: List[str]) -> int:
 
 
 if __name__ == '__main__':
-    input = read_input()
-    print(f'Part 1: {part1(input)}')
+    lines = read_input()
+    connections = parse_connections(lines)
+    print(f'Part 1: {part1(connections)}')
