@@ -21,7 +21,7 @@ def parse_connections(lines: List[str]) -> DefaultDict[str, Set[str]]:
 def part1(connections: DefaultDict[str, Set[str]]) -> int:
     path_count = 0
 
-    def visit_node(node: str, path: List[str], explored: Set[str]) -> None:
+    def visit_node(node: str, explored: Set[str]) -> None:
         explored.add(node)
 
         if node == 'end':
@@ -31,9 +31,9 @@ def part1(connections: DefaultDict[str, Set[str]]) -> int:
 
         for neighbour_node in connections[node]:
             if neighbour_node.isupper() or (neighbour_node.islower() and neighbour_node not in explored):
-                visit_node(neighbour_node, path + [node], explored.copy())
+                visit_node(neighbour_node, explored.copy())
 
-    visit_node('start', [], set())
+    visit_node('start', set())
 
     return path_count
 
