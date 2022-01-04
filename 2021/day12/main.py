@@ -16,13 +16,14 @@ def part1(lines: List[str]) -> int:
         connections[start].add(end)
         connections[end].add(start)
 
-    paths: List[List[str]] = []
+    path_count = 0
 
     def visit_node(node: str, path: List[str], explored: Set[str]) -> None:
         explored.add(node)
 
         if node == 'end':
-            paths.append(path + [node])
+            nonlocal path_count
+            path_count += 1
             return
 
         for neighbour_node in connections[node]:
@@ -31,7 +32,7 @@ def part1(lines: List[str]) -> int:
 
     visit_node('start', [], set())
 
-    return len(paths)
+    return path_count
 
 
 if __name__ == '__main__':
