@@ -31,11 +31,13 @@ def part1() -> int:
             pos_p1 = (pos_p1 + roll_sum) % 10
             if pos_p1 == 0:
                 pos_p1 = 10
+
             score_p1 += pos_p1
         else:
             pos_p2 = (pos_p2 + roll_sum) % 10
             if pos_p2 == 0:
                 pos_p2 = 10
+
             score_p2 += pos_p2
 
         roll_count += 3
