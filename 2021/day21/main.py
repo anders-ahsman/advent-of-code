@@ -6,12 +6,13 @@ from typing import Generator
 
 def part1() -> int:
     def deterministic_die_100() -> Generator[int, None, None]:
-        i = 0
+        i = 1
         while True:
+            yield i
+
             i += 1
             if i > 100:
                 i = 1
-            yield i
 
     die = deterministic_die_100()
 
