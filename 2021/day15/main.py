@@ -27,7 +27,7 @@ def a_star(risk_map: List[List[int]]) -> Optional[int]:
     def get_neighbours(p: Position) -> List[Position]:
         p_x, p_y = p
         neighbours: List[Position] = []
-        for (dx, dy) in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        for dx, dy in (-1, 0), (1, 0), (0, -1), (0, 1):
             x = p_x + dx
             y = p_y + dy
             if 0 <= x < len(risk_map[0]) and 0 <= y < len(risk_map):
