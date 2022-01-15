@@ -18,6 +18,7 @@ def read_input() -> List[List[int]]:
 class Node:
     position: Position
     cost: int
+    # heuristic not used
 
     def __lt__(self, other: Node) -> bool:
         return self.cost < other.cost
