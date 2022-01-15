@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import sys
-from typing import Dict, List, Tuple
+from dataclasses import dataclass
+from heapq import heappop, heappush
+from typing import Dict, List, Optional, Tuple
 
 Position = Tuple[int, int]
 
@@ -10,45 +14,75 @@ def read_input() -> List[List[int]]:
     return [[int(n) for n in line.strip()] for line in sys.stdin]
 
 
-def part1(map: List[List[int]]) -> int:
-    pos_to_dest_min_risk: Dict[Position, int] = {}
+@dataclass
+class Node:
+    position: Position
+    cost: int
 
+    def __lt__(self, other: Node) -> bool:
+        return self.cost < other.cost
+
+
+def a_star(risk_map: List[List[int]]) -> Optional[int]:
     def get_neighbours(p: Position) -> List[Position]:
         p_x, p_y = p
-
         neighbours: List[Position] = []
-        if p_x + 1 < len(map[0]):
-            neighbours.append((p_x + 1, p_y))
-        if p_y + 1 < len(map):
-            neighbours.append((p_x, p_y + 1))
-
+        for (dx, dy) in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            x = p_x + dx
+            y = p_y + dy
+            if 0 <= x < len(risk_map[0]) and 0 <= y < len(risk_map):
+                neighbours.append((x, y))
         return neighbours
 
-    def lowest_risk_to_dest(pos: Position, dest_pos: Position) -> None:
-        pos_x, pos_y = pos
+    frontier: List[Node] = []
+    start_pos: Position = (0, 0)
+    start_node: Node = Node(position=start_pos, cost=0)
+    destination_pos: Position = (len(risk_map[0]) - 1, len(risk_map) - 1)
 
-        # don't count initial position
-        risk = map[pos_y][pos_x] if pos != (0, 0) else 0
+    heappush(frontier, start_node)
+    dest_to_min_risk: Dict[Position, int] = {
+        start_pos: 0
+    }
 
-        if pos == dest_pos:
-            pos_to_dest_min_risk[pos] = risk
-            return
+    while frontier:
+        current_node = heappop(frontier)
+        if current_node.position == destination_pos:
+            return current_node.cost
 
-        min_risk_to_neighbours = 999999
-        for neighbour_pos in get_neighbours(pos):
-            if neighbour_pos not in pos_to_dest_min_risk:
-                lowest_risk_to_dest(neighbour_pos, dest_pos)
-            min_risk_to_neighbours = min(pos_to_dest_min_risk[neighbour_pos], min_risk_to_neighbours)
+        for neighbour_pos in get_neighbours(current_node.position):
+            neighbour_x, neighbour_y = neighbour_pos
+            new_cost: int = risk_map[neighbour_y][neighbour_x] + current_node.cost
 
-        pos_to_dest_min_risk[pos] = risk + min_risk_to_neighbours
+            if neighbour_pos not in dest_to_min_risk or new_cost < dest_to_min_risk[neighbour_pos]:
+                dest_to_min_risk[neighbour_pos] = new_cost
+                neighbour_node = Node(position=neighbour_pos, cost=new_cost)
+                heappush(frontier, neighbour_node)
 
-    start_pos = (0, 0)
-    destination_pos = (len(map[0]) - 1, len(map) - 1)
-    lowest_risk_to_dest(pos=start_pos, dest_pos=destination_pos)
+    return None
 
-    return pos_to_dest_min_risk[start_pos]
+
+def enlarge_map(risk_map: List[List[int]]) -> List[List[int]]:
+    size_small_map = len(risk_map)
+    factor = 5
+    size_large_map = size_small_map * factor
+    risk_map_large = [[0] * size_large_map for _ in range(size_large_map)]
+
+    for row_offset in range(factor):
+        for col_offset in range(factor):
+            for row_small_map in range(size_small_map):
+                for col_small_map in range(size_small_map):
+                    row = row_small_map + row_offset * size_small_map
+                    col = col_small_map + col_offset * size_small_map
+                    manhattan_dist = abs(row_small_map - row) + abs(col_small_map - col)
+                    value = (risk_map[row_small_map][col_small_map] + manhattan_dist - 1) % 9 + 1
+                    risk_map_large[row][col] = value
+
+    return risk_map_large
 
 
 if __name__ == '__main__':
-    map = read_input()
-    print(f'Part 1: {part1(map)}')
+    risk_map = read_input()
+    print(f'Part 1: {a_star(risk_map)}')
+
+    risk_map_large = enlarge_map(risk_map)
+    print(f'Part 2: {a_star(risk_map_large)}')
