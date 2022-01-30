@@ -22,8 +22,8 @@ def process_polymer(polymer: str, rules: Dict[str, str], steps: int) -> int:
 
     def extend_polymer(polymer: str, rules: Dict[str, str]) -> str:
         polymer_new: str = ''
-        for idx, polymer_char in enumerate(polymer):
-            polymer_new += polymer_char
+        for idx, element in enumerate(polymer):
+            polymer_new += element
 
             if idx + 2 <= len(polymer):
                 rule_from = polymer[idx:idx + 2]
