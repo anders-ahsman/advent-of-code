@@ -1,27 +1,28 @@
 #!/usr/bin/env python3
 
 import sys
-from typing import List
+from collections import deque
+from typing import Deque, List
 
 
 def read_lanternfish() -> List[int]:
     return [int(n) for n in next(sys.stdin).split(',')]
 
 
-def part1(fish: List[int]) -> int:
-    day = 1
-    while day <= 80:
-        new_fish: List[int] = []
-        for i in range(len(fish)):
-            fish[i] -= 1
-            if fish[i] < 0:
-                fish[i] = 6
-                new_fish.append(8)
-        fish += new_fish
-        day += 1
-    return len(fish)
+def simulate_fish_growth(fish: List[int], days: int) -> int:
+    fish_days_until_procreation: Deque[int] = deque([fish.count(day) for day in range(7)])
+    fish_offspring: Deque[int] = deque([0, 0, 0])  # one extra day, should not count offspring until next day
+
+    for _ in range(days - 1):
+        fish_days_until_procreation.rotate(-1)
+        fish_days_until_procreation[6] += fish_offspring.popleft()
+
+        fish_offspring.append(fish_days_until_procreation[0])
+
+    return sum(fish_days_until_procreation) + sum(fish_offspring)
 
 
 if __name__ == '__main__':
     fish = read_lanternfish()
-    print(f'Part 1: {part1(fish)}')
+    print(f'Part 1: {simulate_fish_growth(fish, 80)}')
+    print(f'Part 2: {simulate_fish_growth(fish, 256)}')
