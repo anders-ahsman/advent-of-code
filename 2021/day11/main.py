@@ -21,27 +21,27 @@ def part1(board: Board) -> int:
             for x in range(len(board[y])):
                 board[y][x] += 1
 
-        # keep going until flashes stop
-        has_flashed_this_step: Set[Position] = set()
+        # keep going through all positions until flashes stop
+        has_flashed: Set[Position] = set()
         while True:
-            flash_count_before_step: int = len(has_flashed_this_step)
+            flash_count_before: int = len(has_flashed)
             for y in range(len(board)):
                 for x in range(len(board[y])):
-                    if board[y][x] > 9 and (x, y) not in has_flashed_this_step:
-                        has_flashed_this_step.add((x, y))
+                    if board[y][x] > 9 and (x, y) not in has_flashed:
+                        has_flashed.add((x, y))
                         for nb_x, nb_y in get_neighbours(board, x, y):
-                            if (nb_x, nb_y) not in has_flashed_this_step:
+                            if (nb_x, nb_y) not in has_flashed:
                                 board[nb_y][nb_x] += 1
 
-            flash_count_after_step: int = len(has_flashed_this_step)
-            if flash_count_after_step == flash_count_before_step:
+            flash_count_after: int = len(has_flashed)
+            if flash_count_after == flash_count_before:
                 break  # no change, step is complete
 
         # reset energy on all that flashed
-        for x, y in has_flashed_this_step:
+        for x, y in has_flashed:
             board[y][x] = 0
 
-        total_flashes += len(has_flashed_this_step)
+        total_flashes += len(has_flashed)
 
     return total_flashes
 
