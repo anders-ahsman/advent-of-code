@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import List, Set, Tuple
 
@@ -44,6 +45,16 @@ def part1(markings: List[Position], fold_instructions: List[FoldInstruction]) ->
     return len(markings)
 
 
+def part2(markings: List[Position], fold_instructions: List[FoldInstruction]) -> None:
+    for fold_instruction in fold_instructions:
+        markings = fold(markings, fold_instruction)
+
+    for y in range(max(markings, key=lambda p: p.y).y + 1):
+        for x in range(max(markings, key=lambda p: p.x).x + 1):
+            print('#' if Position(x, y) in markings else '.', end='')
+        print()
+
+
 def fold(markings: List[Position], fold_instruction: FoldInstruction) -> List[Position]:
     markings_after_fold: Set[Position] = set()
 
@@ -71,4 +82,6 @@ def fold(markings: List[Position], fold_instruction: FoldInstruction) -> List[Po
 
 if __name__ == '__main__':
     markings, fold_instructions = read_markings_and_fold_instructions()
-    print(f'Part 1: {part1(markings, fold_instructions)}')
+    print(f'Part 1: {part1(deepcopy(markings), fold_instructions)}')
+    print('Part 2:')
+    part2(deepcopy(markings), fold_instructions)
