@@ -42,7 +42,7 @@ class Program
                 continue;
             }
 
-            for (var i = 0; i < report.Count - 1; i++)
+            for (var i = 0; i < report.Count; i++)
             {
                 var modifiedReport = report.Where((_, index) => index != i).ToList();
                 if (IsIncreasingOrDecreasingSafely(modifiedReport))
