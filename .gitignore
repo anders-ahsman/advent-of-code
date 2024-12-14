@@ -1,6 +1,8 @@
 input.txt
 input_small.txt
 input_test.txt
+out.txt
+out2.txt
 __pycache__/
 venv/
 
