@@ -13,6 +13,7 @@ def solve(reports: list[list[int]], part2: bool) -> int:
     for report in reports:
         if is_safe(report):
             safe += 1
+            continue
         elif part2:
             for i in range(len(report)):
                 modified = report[:i] + report[i + 1 :]
