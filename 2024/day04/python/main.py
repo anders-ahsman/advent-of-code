@@ -64,9 +64,8 @@ def is_xmas_chunk(chunk: list[str]) -> bool:
     if chunk[1][1] != 'A':
         return False
 
-    return ((chunk[0][0] == 'M' and chunk[2][2] == 'S') or (chunk[0][0] == 'S' and chunk[2][2] == 'M')) and (
-        (chunk[0][2] == 'M' and chunk[2][0] == 'S') or (chunk[0][2] == 'S' and chunk[2][0] == 'M')
-    )
+    valid = {'SM', 'MS'}
+    return chunk[0][0] + chunk[2][2] in valid and chunk[0][2] + chunk[2][0] in valid
 
 
 if __name__ == '__main__':
