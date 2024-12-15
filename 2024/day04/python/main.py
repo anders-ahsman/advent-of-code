@@ -7,7 +7,7 @@ def read_input() -> list[str]:
     return [line.strip() for line in sys.stdin]
 
 
-def solve(document: list[str]) -> int:
+def part1(document: list[str]) -> int:
     directions = (
         (0, 1),
         (1, -1),
@@ -45,6 +45,31 @@ def out_of_bounds(x: int, y: int, col_count: int, row_count: int) -> bool:
     return x < 0 or y < 0 or x >= col_count or y >= row_count
 
 
+def part2(document: list[str]) -> int:
+    count = 0
+    row_count = len(document)
+    col_count = len(document[0])
+
+    chunk_size = 3
+    for yi in range(row_count - chunk_size + 1):
+        for xi in range(col_count - chunk_size + 1):
+            chunk: list[str] = [document[y][xi : xi + chunk_size] for y in range(yi, yi + chunk_size)]
+            if is_xmas_chunk(chunk):
+                count += 1
+
+    return count
+
+
+def is_xmas_chunk(chunk: list[str]) -> bool:
+    if chunk[1][1] != 'A':
+        return False
+
+    return ((chunk[0][0] == 'M' and chunk[2][2] == 'S') or (chunk[0][0] == 'S' and chunk[2][2] == 'M')) and (
+        (chunk[0][2] == 'M' and chunk[2][0] == 'S') or (chunk[0][2] == 'S' and chunk[2][0] == 'M')
+    )
+
+
 if __name__ == '__main__':
     document = read_input()
-    print(solve(document))
+    print(part1(document))
+    print(part2(document))
