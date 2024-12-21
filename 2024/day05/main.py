@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import sys
 from collections import defaultdict
 from typing import DefaultDict
@@ -64,9 +65,24 @@ def part1(valid_updates: list[Update]) -> int:
     return sum_middle_numbers(valid_updates)
 
 
+def part2(invalid_updates: list[Update], rules: RuleDict) -> int:
+    fixed_updates: list[Update] = []
+
+    for update in invalid_updates:
+        relevant_rules = {k: [v for v in rules[k] if v in update] for k in update if k in rules}
+
+        fixed_update = sorted(relevant_rules, key=lambda k: len(relevant_rules[k]), reverse=True)
+        fixed_update += [page for page in update if page not in fixed_update]
+
+        fixed_updates.append(fixed_update)
+
+    return sum_middle_numbers(fixed_updates)
+
+
 if __name__ == '__main__':
     puzzle_input = read_input()
     rules, updates = get_rules_and_updates(puzzle_input)
     valid_updates, invalid_updates = get_valid_and_invalid_updates(rules, updates)
 
     print(f'Part 1: {part1(valid_updates)}')
+    print(f'Part 2: {part2(invalid_updates, rules)}')
