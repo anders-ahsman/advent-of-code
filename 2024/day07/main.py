@@ -4,6 +4,9 @@ import itertools
 import operator
 import sys
 from dataclasses import dataclass
+from typing import Callable
+
+BinaryIntOp = Callable[[int, int], int]
 
 
 @dataclass(frozen=True)
@@ -23,7 +26,19 @@ def read_input() -> list[Equation]:
 
 def part1(equations: list[Equation]) -> int:
     operators = [operator.add, operator.mul]
-    sum_test_values = 0
+    return calculate_test_value_sum(equations, operators)
+
+
+def part2(equations: list[Equation]) -> int:
+    def concat(a: int, b: int) -> int:
+        return int(str(a) + str(b))
+
+    operators = [operator.add, operator.mul, concat]
+    return calculate_test_value_sum(equations, operators)
+
+
+def calculate_test_value_sum(equations: list[Equation], operators: list[BinaryIntOp]) -> int:
+    test_value_sum = 0
     for equation in equations:
         for op_combo in itertools.product(operators, repeat=len(equation.numbers) - 1):
             result = equation.numbers[0]
@@ -31,12 +46,13 @@ def part1(equations: list[Equation]) -> int:
                 result = op_combo[i - 1](result, equation.numbers[i])
 
             if result == equation.test_value:
-                sum_test_values += result
+                test_value_sum += result
                 break
 
-    return sum_test_values
+    return test_value_sum
 
 
 if __name__ == '__main__':
     equations = read_input()
     print(f'Part 1: {part1(equations)}')
+    print(f'Part 2: {part2(equations)}')
