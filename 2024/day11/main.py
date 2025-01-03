@@ -20,8 +20,8 @@ def process_stones(stones: list[int], max_iter: int) -> int:
             if stone == 0:
                 stones[i] = 1
             elif len(str(stone)) % 2 == 0:
-                idx = len(str(stone)) // 2
-                left, right = int(str(stone)[:idx]), int(str(stone)[idx:])
+                idx_middle = len(str(stone)) // 2
+                left, right = int(str(stone)[:idx_middle]), int(str(stone)[idx_middle:])
                 stones[i] = left
                 stones.insert(i + 1, right)
                 i += 1
