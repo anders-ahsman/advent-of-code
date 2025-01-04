@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from functools import lru_cache
 
 
 def read_input() -> list[int]:
@@ -8,30 +9,35 @@ def read_input() -> list[int]:
     return list(map(int, line.split()))
 
 
-def part1(stones: list[int]) -> int:
-    return process_stones(stones, 25)
+def process_stones(stones: list[int], steps: int) -> int:
+    return sum(expand_count(stone, steps) for stone in stones)
 
 
-def process_stones(stones: list[int], max_iter: int) -> int:
-    for _ in range(max_iter):
-        i = 0
-        while i < len(stones):
-            stone = stones[i]
-            if stone == 0:
-                stones[i] = 1
-            elif len(str(stone)) % 2 == 0:
-                idx_middle = len(str(stone)) // 2
-                left, right = int(str(stone)[:idx_middle]), int(str(stone)[idx_middle:])
-                stones[i] = left
-                stones.insert(i + 1, right)
-                i += 1
-            else:
-                stones[i] = stone * 2024
-            i += 1
+@lru_cache(None)
+def expand_count(stone: int, steps: int) -> int:
+    if steps == 0:
+        return 1
 
-    return len(stones)
+    next_stones = process_stone(stone)
+    return sum(expand_count(s, steps - 1) for s in next_stones)
+
+
+@lru_cache(None)
+def process_stone(stone: int) -> tuple[int, ...]:
+    if stone == 0:
+        return (1,)
+    else:
+        s = str(stone)
+        if len(s) % 2 == 0:
+            mid = len(s) // 2
+            left = int(s[:mid])
+            right = int(s[mid:])
+            return (left, right)
+        else:
+            return (stone * 2024,)
 
 
 if __name__ == '__main__':
     stones = read_input()
-    print(f'Part 1: {part1(stones)}')
+    print(f'Part 1: {process_stones(stones, 25)}')
+    print(f'Part 2: {process_stones(stones, 75)}')
